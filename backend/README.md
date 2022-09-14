@@ -1,27 +1,6 @@
-# Task Scheduler
+# Task Scheduler Backend
 
-This repo is built as a part of the course "Individuellt programvaruprojekt" at BTH.
-
-## Frontend
-### Available Scripts
-
-In the frontend directory, you can run:
-
-```
-npm start
-```
-
-Runs the app in the development mode.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-```
-npm run build
-```
-Bundles the app into static files for production.
-
-## Backend
-
-### REST-API with manual is coming
+## REST-API with manual is coming
 
 ### users
 
@@ -48,7 +27,7 @@ est_duration
 act_duration
 ```
 
-### Available Scripts
+## Available Scripts
 
 In the backend directory, you can run:
 
