@@ -66,7 +66,7 @@ mongoose.connect(
 // Start up server
     .then(() => {
         app.listen(port, () => {
-            console.log(`Pattern API with Mongoose listening on port ${port}!`);
+            console.log(`Task Scheduler API listening on port ${port}!`);
         });
     })
     .catch((err) => {
