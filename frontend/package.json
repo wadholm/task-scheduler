@@ -10,6 +10,8 @@
     "hookrouter": "^1.2.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
+    "react-datepicker": "^4.8.0",
+    "react-datetime-picker": "^4.0.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.0",
     "url": "^0.11.0",
