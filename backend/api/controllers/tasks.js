@@ -24,6 +24,7 @@ exports.get_all_tasks = (req, res) => {
 
 exports.get_task = (req, res) => {
     const id = req.params.taskId;
+
     Task.findById(id)
         .select("-__v")
         .exec()
@@ -46,6 +47,11 @@ exports.get_task = (req, res) => {
 };
 
 exports.add_task = (req, res) => {
+    if (!req.body.user) {
+        return res.status(401).json({
+            message: "User missing."
+        });
+    }
     const task = new Task({
         _id: new mongoose.Types.ObjectId(),
         user: req.body.user,
@@ -59,7 +65,6 @@ exports.add_task = (req, res) => {
 
     task.save()
         .then(result => {
-            console.log(result);
             res.status(201).json({
                 message: `Task created.`,
                 createdTask: result
@@ -111,22 +116,22 @@ exports.delete_task = (req, res) => {
     const id = req.params.taskId;
 
     Task.findByIdAndDelete(id)
-    .exec()
-    .then(result => {
+        .exec()
+        .then(result => {
         // console.log(`Deleted task: ${result}`);
-        if (result) {
-            return res.status(200).json({
-                message: `Task deleted.`
+            if (result) {
+                return res.status(200).json({
+                    message: `Task deleted.`
+                });
+            }
+            res.status(404).json({
+                message: "No valid entry found for provided ID."
             });
-        }
-        res.status(404).json({
-            message: "No valid entry found for provided ID."
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                error: err
+            });
         });
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({
-            error: err
-        });
-    });
 };

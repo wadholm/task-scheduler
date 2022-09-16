@@ -50,10 +50,12 @@ let dsn;
 
 // OBS! Insert test db
 if (process.env.NODE_ENV === 'test') {
-    dsn = "mongodb://127.0.0.1:27017/testdb";
+    dsn = "mongodb://127.0.0.1:27017/dbtest";
 } else {
     // MongoDB Atlas
-    dsn = `mongodb+srv://task-scheduler:${process.env.DB_PW}@cluster1.h4d9bh0.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+    dsn = `mongodb+srv://task-scheduler:${process.env.DB_PW}` +
+    `@cluster1.h4d9bh0.mongodb.net/${process.env.DB_NAME}` +
+    `?retryWrites=true&w=majority`;
 }
 
 mongoose.connect(
@@ -96,3 +98,5 @@ app.use((err, req, res, next) => {
         ]
     });
 });
+
+exports.app = app;

@@ -1,6 +1,5 @@
 let express = require('express');
 let router = express.Router();
-const mongoose = require("mongoose");
 
 const UsersController = require("../controllers/users");
 

@@ -25,7 +25,7 @@ exports.get_all_users = (req, res) => {
 
 exports.get_user = (req, res) => {
     const id = req.params.userId;
-    
+
     User.findById(id)
         .select("-__v")
         .exec()
@@ -48,22 +48,41 @@ exports.get_user = (req, res) => {
 };
 
 exports.add_user = (req, res) => {
-    const user = new User({
-        _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    });
-    user.save()
-    .then(result => {
-        console.log(result);
-    })
-    .catch(err => console.error(err));
-    
-    res.status(201).json({
-        message: `User created.`,
-        createduser: user
-    });
+    User.find({ email: req.body.email })
+        .exec()
+        .then(user => {
+            if (!req.body.email || !req.body.password) {
+                return res.status(401).json({
+                    message: "Email or password missing."
+                });
+            }
+
+            if (user.length >= 1) {
+                return res.status(409).json({
+                    message: "Email already exists"
+                });
+            }
+            user = new User({
+                _id: new mongoose.Types.ObjectId(),
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password
+            });
+
+            user.save()
+                .then(result => {
+                    res.status(201).json({
+                        message: `User created.`,
+                        createdUser: result
+                    });
+                })
+                .catch(err => {
+                // console.error(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+        });
 };
 
 exports.update_user = (req, res) => {
@@ -97,17 +116,28 @@ exports.update_user = (req, res) => {
 
 exports.delete_user = (req, res) => {
     const id = req.params.userId;
+    let tasksDeletedcount;
 
-    Task.deleteMany({user:id})
-    .exec()
-    .then(result => {
-        tasksDeletedcount = result.deletedCount;
-        User.findOneAndDelete(id)
+    Task.deleteMany({user: id})
         .exec()
         .then(result => {
-            res.status(200).json({
-                message: `User with ID: ${result._id} and ${tasksDeletedcount} related tasks deleted.`
-            });
+            tasksDeletedcount = result.deletedCount;
+
+            User.findOneAndDelete(id)
+                .exec()
+                .then(result => {
+                    res.status(200).json({
+                        message:
+                        `User with ID: ${result._id} and ` +
+                        `${tasksDeletedcount} related tasks deleted.`
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
         })
         .catch(err => {
             console.error(err);
@@ -115,11 +145,4 @@ exports.delete_user = (req, res) => {
                 error: err
             });
         });
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({
-            error: err
-        });
-    });
 };
