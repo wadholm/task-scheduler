@@ -1,6 +1,6 @@
 import React from "react";
-import Home from "./components/Home";
-import List from "./components/List";
+import Home from "./pages/Home";
+import List from "./pages/List";
 
 const Routes = {
   "/": () => <Home />,

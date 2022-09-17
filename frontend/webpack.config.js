@@ -1,3 +1,4 @@
 export const resolve = {
-    fallback: { "url": require.resolve("url/") }
+    // eslint-disable-next-line no-undef
+    fallback: { url: require.resolve("url/") },
 };
