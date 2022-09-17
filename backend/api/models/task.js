@@ -5,7 +5,7 @@ const taskSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", require: true},
     description: String,
     category: String,
-    state: String,
+    state: { type: String, default: "planned" },
     start_time: Date,
     deadline: Date,
     est_duration: Number,
