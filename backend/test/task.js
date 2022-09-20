@@ -129,4 +129,63 @@ describe('Tasks model', () => {
                 });
         });
     });
+    describe('GET /tasks/user/:userId', () => {
+        it('200 HAPPY PATH for tasks by user id', (done) => {
+            chai.request(server)
+                .get(`/tasks/user/${userId}`)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(200);
+                    res.body.should.be.an("object");
+                    res.body.should.have.property("tasks");
+                    done();
+                });
+        });
+        it('should get 500 for incorrect id', (done) => {
+            chai.request(server)
+                .get(`/tasks/user/${userId}1`)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(500);
+                    res.body.should.be.an("object");
+                    done();
+                });
+        });
+    });
+    describe('DELETE /tasks/:taskId', () => {
+        it('200 HAPPY PATH for delete task by id', (done) => {
+            chai.request(server)
+                .delete(`/tasks/${taskId}`)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(200);
+                    res.body.should.be.an("object");
+                    res.body.should.have.property("message");
+                    res.body.message.should.equal("Task deleted.");
+                    done();
+                });
+        });
+        it('should get 404 no entry for provided id', (done) => {
+            chai.request(server)
+                .delete(`/tasks/${fakeTaskId}`)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(404);
+                    res.body.should.be.an("object");
+                    res.body.should.have.property("message");
+                    res.body.message.should.equal("No valid entry found for provided ID.");
+                    done();
+                });
+        });
+        it('should get 500 for incorrect id', (done) => {
+            chai.request(server)
+                .delete(`/tasks/${userId}1`)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(500);
+                    res.body.should.be.an("object");
+                    done();
+                });
+        });
+    });
 });

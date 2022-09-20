@@ -22,6 +22,30 @@ exports.get_all_tasks = (req, res) => {
         });
 };
 
+exports.tasks_get_by_user = (req, res) => {
+    const id = req.params.userId;
+
+    Task.find({ user: id })
+        .select("-__v")
+        .exec()
+        .then(docs => {
+            if (docs) {
+                const response = {
+                    count: docs.length,
+                    tasks: docs
+                };
+
+                return res.status(200).json(response);
+            }
+        })
+        .catch(err => {
+            // console.error(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+};
+
 exports.get_task = (req, res) => {
     const id = req.params.taskId;
 
@@ -129,7 +153,6 @@ exports.delete_task = (req, res) => {
             });
         })
         .catch(err => {
-            console.error(err);
             res.status(500).json({
                 error: err
             });
