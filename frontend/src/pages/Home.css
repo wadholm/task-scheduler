@@ -2,3 +2,8 @@ img {
     width: 80%;
     float: right;
 }
+
+.task-adder {
+    max-width: 35em;
+    margin: auto;
+}

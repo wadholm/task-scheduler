@@ -6,11 +6,12 @@ import { Form } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import DateTimePicker from "react-datetime-picker";
 import "./NewForm.css";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
+// import "react-datetime-picker/dist/DateTimePicker.css";
 import Axios from "axios";
 
 function NewForm(props) {
-  const { setAddTask, show, setShow, setMessage } = props;
+  const { setAddTask, setShow, setMessage } = props;
 
   const [activeElementType, setActiveElementType] = useState("dropdown");
   const [validated, setValidated] = useState(false);
@@ -19,8 +20,6 @@ function NewForm(props) {
   const [startTime, setStartTime] = useState(new Date());
   const [deadline, setDeadline] = useState(new Date());
   const [estDuration, setEstDuration] = useState("");
-
-  console.log(show);
 
   const dropDownChanged = (event) => {
     setCategory(event.target.value);
@@ -81,29 +80,14 @@ function NewForm(props) {
     setValidated(true);
   };
 
-  // const onFolderNameChange = (e) => {
-  //     setFolderName(e.target.value);
-  //   };
-
-  //   const onFolderCreate = () => {
-  //     if (!folderName) {
-  //       setMessage({type: "warning", title: "Ojdå, något gick fel.", text: "Kundnamn saknas."})
-  //       setShow(true);
-  //       return;
-  //     }
-  //     db.collection("users").doc(docId).collection("folders").doc(folderName).set({
-  //       name: folderName,
-  //     });
-  //     setMessage({type: "success", title: "Allt gick bra!", text: 'Kunden har sparats i databasen.'})
-  //     setShow(true);
-  //     setFolderName("");
-  //   };
   return (
     <>
+    <div className="editable">
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="decription">
           <Form.Label>Description</Form.Label>
           <Form.Control
+           as="textarea" rows={2}
             required
             type="description"
             placeholder="Enter description"
@@ -117,6 +101,7 @@ function NewForm(props) {
           <>
             <Form.Label>Category</Form.Label>
             <Form.Control
+              className="editable"
               as="select"
               onChange={(e) => dropDownChanged(e)}
               aria-label="Default select example"
@@ -135,6 +120,7 @@ function NewForm(props) {
             <Form.Label>Category</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
+                className="editable"
                 onChange={(event) => setCategory(event.target.value)}
                 type="category"
                 placeholder="Category"
@@ -151,7 +137,7 @@ function NewForm(props) {
         )}
 
         <Form.Group className="mb-3" controlId="start-time">
-          <Form.Label>Start-time</Form.Label>
+          <Form.Label className="date">Start-time</Form.Label>
           <DateTimePicker
             onChange={(date) => setStartTime(date)}
             value={startTime}
@@ -159,7 +145,7 @@ function NewForm(props) {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="deadline">
-          <Form.Label>Deadline</Form.Label>
+          <Form.Label className="date">Deadline</Form.Label>
           <DateTimePicker
             onChange={(date) => setDeadline(date)}
             value={deadline}
@@ -167,8 +153,10 @@ function NewForm(props) {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="est-duration">
-          <Form.Label>Estimated duration (in hours)</Form.Label>
+          <Form.Label>Estimated duration (hours)</Form.Label>
           <Form.Control
+            className="editable"
+            required
             onChange={(event) => setEstDuration(event.target.value)}
             type="number"
             min="1"
@@ -181,6 +169,7 @@ function NewForm(props) {
           Add task
         </Button>
       </Form>
+      </div>
     </>
   );
 }
