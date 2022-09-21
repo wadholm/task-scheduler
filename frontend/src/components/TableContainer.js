@@ -19,8 +19,20 @@ function Table(props) {
  
     if (data.length > 0) {
         return (
-            // apply the table props
-            <BootstrapTable id="myTable" striped bordered hover size="sm" {...getTableProps()}>
+          <>
+          <style type="text/css">
+          {`
+    .table>thead {
+      vertical-align: bottom;
+      background-color: #11126d;
+      color: white;
+    }
+    .table>tbody {
+      background-color: #fff;
+    }
+      `}
+        </style>
+            <BootstrapTable id="myTable" bordered hover {...getTableProps()}>
               <thead>
                 {// Loop over the header rows
                 headerGroups.map(headerGroup => (
@@ -61,6 +73,7 @@ function Table(props) {
                 })}
               </tbody>
             </BootstrapTable>
+            </>
           );
     }
     return <p>No tasks to present. </p>;

@@ -1,3 +1,7 @@
 #myTable tr > *:nth-child(1) {
     display: none;
 }
+
+/* #myTable tr > *:nth-child(2) {
+    text-align: left;
+} */

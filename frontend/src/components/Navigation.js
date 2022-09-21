@@ -2,6 +2,8 @@ import { useRoutes } from "hookrouter";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import logo from "../img/logo.jpg";
+import "./Navigation.css";
 
 import Routes from "../Router";
 
@@ -10,9 +12,12 @@ const Navigation = () => {
 
   return (
     <div className="Navigation">
-      <Navbar bg="light" expand="lg">
+      <Navbar className="mw-nav" expand="lg">
         <Container>
-          <Navbar.Brand href="/">Task Scheduler</Navbar.Brand>
+        <img className="logo" src={logo} alt="logo" />
+          <Navbar.Brand href="/">
+            <h3>Task Scheduler</h3>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">

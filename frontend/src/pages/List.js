@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import AlertBox from "../components/AlertBox";
 import ConfirmBox from "../components/ConfirmBox";
+import "./List.css";
 
 const List = () => {
   const [data, setData] = useState([]);
@@ -30,7 +31,7 @@ const List = () => {
         .catch((error) => {
           console.error(error);
         });
-  }, [data]);
+  }, [confirm]);
 
 
   const columns = useMemo(
@@ -77,6 +78,8 @@ const deleteTask = (cell) => {
   console.log(taskId);
 
   setConfirm(true);
+  setShow(true);
+
   setMessage({
     type: "danger",
     title: "Delete task!",
@@ -85,16 +88,31 @@ const deleteTask = (cell) => {
 }
 
   return (
-  <Container className="p-3">
-    <h1 className="header">Task Scheduler List</h1>
-    <AlertBox message={message} show={show} setShow={setShow} />
+  <Container className="p-3 grid wrapper">
+  <div className="header-wrapper">
+    <h1 className="header">List view</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+    </div>
+    <div className="confirm-wrapper">
     <ConfirmBox 
     message={message} setMessage={setMessage}
     setShow={setShow}
     confirm={confirm} setConfirm={setConfirm}
     taskId={taskId} setTaskId={setTaskId}
     />
+    </div>
+    <div className="main-wrapper">
+    <AlertBox
+    message={message} setMessage={setMessage}
+    show={show} setShow={setShow}
+    confirm={confirm} setConfirm={setConfirm}
+    taskId={taskId} setTaskId={setTaskId}
+    />
     <Table columns={columns} data={data} />
+    </div>
   </Container>
   );
 };

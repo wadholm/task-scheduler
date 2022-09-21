@@ -1,0 +1,18 @@
+.App {
+    background-image: linear-gradient(#fff, #e6ebfe);
+}
+
+.header-wrapper {
+    grid-column: 2 / 4;
+    grid-row: 1 / 2;
+}
+
+.confirm-wrapper {
+    grid-column: 1 / 5;
+    grid-row: 3 / 4;
+}
+
+.main-wrapper {
+    grid-column: 1 / 5;
+    grid-row: 4 / 8;
+}

@@ -126,7 +126,7 @@ function NewForm(props) {
                 placeholder="Category"
               />
               <Button
-                variant="outline-secondary"
+                variant="secondary"
                 id="button-addon2"
                 onClick={backToDropdown}
               >

@@ -3,11 +3,19 @@
 }
 
 .footer a {
-    color: rgb(61, 61, 61);
+    color: #fff;
     font-weight: 600;
 }
 
 .footer a:hover {
     font-weight: 800;
     text-decoration: none;
+}
+
+.footer {
+    background-color: #7c98f5;
+}
+
+.footer p {
+    color: #fff;
 }
