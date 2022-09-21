@@ -16,6 +16,8 @@ const tasks = require('./api/routes/tasks');
 // Port settings
 const port = process.env.PORT || 1337;
 
+console.log(process.env.PORT);
+
 // Cors
 app.use(cors());
 
@@ -34,8 +36,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 // Middleware for all routes
 app.use((req, res, next) => {
-    console.log(req.method);
-    console.log(req.path);
+    // console.log(req.method);
+    // console.log(req.path);
     next();
 });
 
@@ -48,7 +50,7 @@ app.use('/tasks', tasks);
 // Connect Mongoose
 let dsn;
 
-// OBS! Insert test db
+// test db
 if (process.env.NODE_ENV === 'test') {
     dsn = "mongodb://127.0.0.1:27017/dbtest";
 } else {
