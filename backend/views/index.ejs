@@ -1,0 +1,121 @@
+<%- include("header"); %>
+
+<h1>Task Scheduler API documentation</h1>
+
+<h2>Content</h2>
+
+    <ul>
+        <li><a class="link" href="#users">Users</a></li>
+        <li><a class="link" href="#tasks">Tasks</a></li>
+    </ul>
+
+<section id="users">
+
+<h2>Users</h2>
+
+<p>A user has the following attributes:</p>
+
+<pre>
+_id
+name
+email
+password
+</pre>
+
+<h2>To get all users:</h2>
+
+<pre>GET /users</pre>
+
+<p>Result:</p>
+
+<pre>
+{
+    "count": 2,
+    "users": [
+        {
+            "_id": "619f6ee3d0b6c914a2b58514",
+            "name": "John Doe",
+            "email": "john@exampple.com",
+            "password": "password"
+        },
+        {
+            "_id": "619f767f6736ee4a118b900a",
+            "firstname": "Jane Doe",
+            "email": "jane@example.com",
+            "password": "pass"
+        }
+    ]
+}
+</pre>
+
+<h2>To get user by id:</h2>
+
+<pre>GET /users/:user_id</pre>
+
+<p>Result:</p>
+
+<pre>
+{
+    "user": {
+        "_id": "619f6ee3d0b6c914a2b58514",
+        "name": "John Doe",
+        "email": "john@exampple.com",
+        "password": "password"
+    }
+}
+</pre>
+
+</section>
+
+<section id="tasks">
+
+    <h2>tasks</h2>
+    
+    <p>A user has the following attributes:</p>
+    
+    <pre>
+    _id
+    name
+    email
+    password
+    </pre>
+    
+    <h2>To get all tasks:</h2>
+    
+    <pre>GET /tasks</pre>
+    
+    <p>Result:</p>
+    
+    <pre>
+    {
+        "count": 2,
+        "tasks": [
+            {
+                "_id": "632b13c7737c4005f785ef72",
+                "user": "619f6ee3d0b6c914a2b58514",
+                "description": "Example task. ",
+                "category": "daily",
+                "state": "planned",
+                "start_time": "2022-09-21T13:37:55.084Z",
+                "deadline": "2022-09-22T13:37:55.084Z",
+                "est_duration": 2
+            },
+            {
+                "_id": "632c8f7fdd30799fba334380",
+                "user": "619f6ee3d0b6c914a2b58514",
+                "description": "Another example task. ",
+                "category": "engineering",
+                "state": "planned",
+                "start_time": "2022-09-22T16:38:07.473Z",
+                "deadline": "2022-09-23T16:38:07.473Z",
+                "est_duration": 8
+            }
+        ]
+    }
+    </pre>
+
+    </section>
+
+
+
+<%- include("footer"); %>

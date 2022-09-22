@@ -1,10 +1,10 @@
+/* eslint-disable no-undef */
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
 import "./App.css";
 
 const App = () => {
-
 
   return (
     <>
@@ -41,9 +41,6 @@ const App = () => {
     --bs-btn-hover-bg: #E44E4D;
     --bs-btn-hover-border-color: #E44E4D;
     color: #FE7062;
-  }
-  alert-dismissible {
-    padding: 1.5rem 3rem;
   }
   `}
     </style>

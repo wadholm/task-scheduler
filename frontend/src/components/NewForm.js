@@ -1,14 +1,12 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import Axios from "axios";
 import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import DateTimePicker from "react-datetime-picker";
 import "./NewForm.css";
-// import "react-datepicker/dist/react-datepicker.css";
-// import "react-datetime-picker/dist/DateTimePicker.css";
-import Axios from "axios";
 
 function NewForm(props) {
   const { setAddTask, setShow, setMessage } = props;
@@ -46,7 +44,7 @@ function NewForm(props) {
     } else {
       Axios({
         method: "POST",
-        url: `${process.env.REACT_APP_DEV_ENDPOINT}/tasks`,
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
         data: {
           user: process.env.REACT_APP_TEST_USER,
           description: description,

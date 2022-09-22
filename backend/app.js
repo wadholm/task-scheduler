@@ -16,8 +16,6 @@ const tasks = require('./api/routes/tasks');
 // Port settings
 const port = process.env.PORT || 1337;
 
-console.log(process.env.PORT);
-
 // Cors
 app.use(cors());
 
@@ -41,11 +39,15 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use("/public", express.static('public'));
+
 // Add routes
 app.use('/', index);
 app.use('/users', users);
 app.use('/tasks', tasks);
 
+// set view engine for testing Oauth / manual for API?
+app.set('view engine', 'ejs');
 
 // Connect Mongoose
 let dsn;

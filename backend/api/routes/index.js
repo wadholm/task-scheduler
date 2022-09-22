@@ -1,14 +1,8 @@
-let express = require('express');
-let router = express.Router();
+var express = require('express');
+var router = express.Router();
 
-router.get('/', function(req, res) {
-    const data = {
-        data: {
-            msg: "Hello Index"
-        }
-    };
-
-    res.json(data);
+router.get("/", (req, res) => {
+    res.render("index");
 });
 
 module.exports = router;

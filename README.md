@@ -3,6 +3,10 @@
 This repo is built as a part of the course "Individuellt programvaruprojekt" at BTH.
 
 ## Frontend
+
+### The task-scheduler web app is available at:
+https://task-scheduler-frontend.herokuapp.com/
+
 ### Available Scripts
 
 In the frontend directory, you can run:
@@ -21,7 +25,8 @@ Bundles the app into static files for production.
 
 ## Backend
 
-### REST-API with manual is coming
+### REST-API is available at:
+https://task-scheduler-backend.herokuapp.com/
 
 ### users
 

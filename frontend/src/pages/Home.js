@@ -50,11 +50,13 @@ const Home = () => {
         </Alert>
       ) : (
         <>
-        <div className="p-wrapper"><p>Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit nullam nunc justo sagittis suscipit ultrices.</p></div>
-        <div className="btn-wrapper"><Button variant="primary" onClick={onButtonClick}>Add new task</Button></div>
+        <Container className="p-wrapper">
+        <p>Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit nullam nunc justo sagittis suscipit ultrices.</p>
+        <div><Button variant="primary" onClick={onButtonClick}>Add new task</Button></div>
+        </Container>
         </>
       )}
-      <img src={view} alt="view" />
+      <img className="home-img"src={view} alt="view" />
     </Container>
     </>
   );

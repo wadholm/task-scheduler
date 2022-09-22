@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React from "react";
+import Axios from "axios";
 import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import Axios from "axios";
 
 function AlertBox(props) {
   const { message, confirm, setConfirm, show, setShow, taskId, setTaskId } = props;
@@ -15,11 +15,13 @@ function AlertBox(props) {
     setShow(false)
     Axios({
       method: "DELETE",
-      url: `${process.env.REACT_APP_DEV_ENDPOINT}/tasks/${taskId}`,
+      url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
     })
       .then((res) => {
         if (res.status === 200) {
-          console.info(res);
+          console.info(res.data.message);
+          // reload the page
+          window.location.reload(false);
         }
       })
       .catch((error) => {
@@ -28,15 +30,11 @@ function AlertBox(props) {
     setTaskId("");
   };
 
-  // const cancelDeletion = () => {
-  //   setConfirm(false);
-  // };
-
   if (confirm) {
     return (
       <>
       <Modal
-            {...props}
+            // {...props}
             size="sm"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -58,7 +56,7 @@ function AlertBox(props) {
     return (
       <>
       <Modal
-      {...props}
+      // {...props}
       size="sm"
       aria-labelledby="contained-modal-title-vcenter"
       centered

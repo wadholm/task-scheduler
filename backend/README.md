@@ -1,6 +1,7 @@
 # Task Scheduler Backend
 
-## REST-API with manual is coming
+## REST-API is available at:
+https://task-scheduler-backend.herokuapp.com/
 
 ### users
 

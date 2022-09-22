@@ -34,6 +34,13 @@ h3 {
   color: #61dafb;
 }
 
+@media (max-width: 992px) {
+  .grid {
+    display: block;
+}
+
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

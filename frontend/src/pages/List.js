@@ -2,11 +2,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Axios from "axios";
 import Container from "react-bootstrap/Container";
-import Table from "../components/TableContainer";
+import Table from "../components/Table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import AlertBox from "../components/AlertBox";
-import ConfirmBox from "../components/ConfirmBox";
 import "./List.css";
 
 const List = () => {
@@ -23,7 +22,7 @@ const List = () => {
   useEffect(() => {
       Axios({
         method: "GET",
-        url: `${process.env.REACT_APP_DEV_ENDPOINT}/tasks/user/${process.env.REACT_APP_TEST_USER}`,
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks/user/${process.env.REACT_APP_TEST_USER}`,
       })
         .then((res) => {
           setData(res.data.tasks);
@@ -31,7 +30,7 @@ const List = () => {
         .catch((error) => {
           console.error(error);
         });
-  }, [confirm]);
+  }, []);
 
 
   const columns = useMemo(
@@ -68,14 +67,14 @@ const List = () => {
 
 
   const editTask = (cell) => {
-    console.log(cell?.row?.original._id);
+    console.info(cell?.row?.original._id);
 }
 
 const deleteTask = (cell) => {
-  console.log(cell?.row?.original._id);
+  console.info(cell?.row?.original._id);
   const id = cell?.row?.original._id;
   setTaskId(id);
-  console.log(taskId);
+  // console.log(taskId);
 
   setConfirm(true);
   setShow(true);
@@ -96,15 +95,7 @@ const deleteTask = (cell) => {
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
     </div>
-    <div className="confirm-wrapper">
-    <ConfirmBox 
-    message={message} setMessage={setMessage}
-    setShow={setShow}
-    confirm={confirm} setConfirm={setConfirm}
-    taskId={taskId} setTaskId={setTaskId}
-    />
-    </div>
-    <div className="main-wrapper">
+    <Container className="main-wrapper">
     <AlertBox
     message={message} setMessage={setMessage}
     show={show} setShow={setShow}
@@ -112,7 +103,7 @@ const deleteTask = (cell) => {
     taskId={taskId} setTaskId={setTaskId}
     />
     <Table columns={columns} data={data} />
-    </div>
+    </Container>
   </Container>
   );
 };
