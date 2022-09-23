@@ -90,10 +90,6 @@ const deleteTask = (cell) => {
   <Container className="p-3 grid wrapper">
   <div className="header-wrapper">
     <h1 className="header">List view</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
     </div>
     <Container className="main-wrapper">
     <AlertBox

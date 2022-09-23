@@ -2,6 +2,10 @@
     display: none;
 }
 
+#myTable {
+    margin-top: 1em;
+}
+
 /* #myTable tr > *:nth-child(2) {
     text-align: left;
 } */

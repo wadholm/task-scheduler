@@ -40,6 +40,14 @@ const Home = () => {
 .alert-dismissible {
   padding: 1.5rem 3rem;
 }
+.grid {
+  display: grid;
+}
+@media (max-width: 992px) {
+  .grid {
+    display: block;
+  }
+}
   `}
     </style>
     <Container className="p-3 grid wrapper">
