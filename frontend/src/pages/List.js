@@ -6,6 +6,9 @@ import Table from "../components/Table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import AlertBox from "../components/AlertBox";
+import { Alert } from "react-bootstrap";
+import Form from "../components/Form";
+import { SelectColumnFilter } from "../components/Filter";
 import "./List.css";
 
 const List = () => {
@@ -13,11 +16,13 @@ const List = () => {
   const [taskId, setTaskId] = useState("");
   const [show, setShow] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [editTask, setEditTask] = useState(false);
   const [message, setMessage] = useState({
     type: "",
     title: "",
     text: "",
   });
+
 
   useEffect(() => {
       Axios({
@@ -36,29 +41,31 @@ const List = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'ID',
-        accessor: '_id', // accessor is the "key" in the data,
-      },
-      {
         Header: 'Description',
         accessor: 'description', // accessor is the "key" in the data
       },
       {
         Header: 'State',
         accessor: 'state',
+        Filter: SelectColumnFilter,
+        filter: "includes",
       },
       {
         Header: 'Category',
         accessor: 'category',
+        Filter: SelectColumnFilter,
+        filter: "includes",
       },
       {
         Header: 'Edit',
         accessor: 'edit', // accessor is the "key" in the data,
-        Cell: props => <FontAwesomeIcon  onClick={() => editTask(props)} icon={icon({name: 'pen-to-square', style: 'solid'})} />
+        disableFilters: true,
+        Cell: props => <FontAwesomeIcon  onClick={() => clickedEditTask(props)} icon={icon({name: 'pen-to-square', style: 'solid'})} />
       },
       {
         Header: 'Delete',
         accessor: 'delete', // accessor is the "key" in the data,
+        disableFilters: true,
         Cell: props => <FontAwesomeIcon  onClick={() => deleteTask(props)} icon={icon({name: 'trash', style: 'solid'})} />
       },
     ],
@@ -66,16 +73,17 @@ const List = () => {
   )
 
 
-  const editTask = (cell) => {
+  const clickedEditTask = (cell) => {
+    const id = cell?.row?.original._id;
     console.info(cell?.row?.original._id);
+    setTaskId(id);
+    setEditTask(true);
 }
 
 const deleteTask = (cell) => {
-  console.info(cell?.row?.original._id);
   const id = cell?.row?.original._id;
-  setTaskId(id);
-  // console.log(taskId);
 
+  setTaskId(id);
   setConfirm(true);
   setShow(true);
 
@@ -98,7 +106,15 @@ const deleteTask = (cell) => {
     confirm={confirm} setConfirm={setConfirm}
     taskId={taskId} setTaskId={setTaskId}
     />
-    <Table columns={columns} data={data} />
+      {editTask ? (
+        <Alert className="task-editor" variant="secondary" onClose={() => setEditTask(false)} dismissible>
+        <Form editTask={editTask} setEditTask={setEditTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} />
+        </Alert>
+      ) : (
+        <>
+        <Table columns={columns} data={data} />
+        </>
+      )}
     </Container>
   </Container>
   );

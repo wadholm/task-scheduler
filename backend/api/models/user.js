@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+// const categoriesSchema = mongoose.Schema({ name: { type: String, unique: true } });
+
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
@@ -10,7 +12,9 @@ const userSchema = mongoose.Schema({
         // eslint-disable-next-line max-len
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    categories: []
+    // categories: { type: Array, default: ["project", "daily"] }, // add default categories
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -8,7 +8,15 @@ import Button from "react-bootstrap/Button";
 function AlertBox(props) {
   const { message, confirm, setConfirm, show, setShow, taskId, setTaskId } = props;
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    // reload the page
+    window.location.reload(false);
+  };
+
+  const handleCancel = () => {
+    setShow(false);
+  };
 
   const confirmDeletion = () => {
     setConfirm(false);
@@ -45,7 +53,7 @@ function AlertBox(props) {
         <Button variant="outline-danger" onClick={confirmDeletion}>
             Delete
           </Button>
-          <Button variant="danger" onClick={handleClose}>
+          <Button variant="danger" onClick={handleCancel}>
             Cancel
           </Button>
         </Modal.Footer>

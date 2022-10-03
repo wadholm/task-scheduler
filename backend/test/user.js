@@ -142,5 +142,60 @@ describe('Users model', () => {
                 });
         });
     });
+    describe('POST /categories/:id', () => {
+        it('200 HAPPY PATH for adding category', (done) => {
+            let category = {
+                category: "test category"
+            };
+
+            chai.request(server)
+                .post(`/categories/${id}`)
+                .send(category)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(200);
+                    res.body.should.be.an("object");
+                    res.body.should.have.property("message");
+                    res.body.message.should.equal("Success.");
+                    done();
+                });
+        });
+    });
+    describe('DELETE /categories/:id', () => {
+        it('200 HAPPY PATH for delete category', (done) => {
+            let category = {
+                category: "test category"
+            };
+
+            chai.request(server)
+                .delete(`/categories/${id}`)
+                .send(category)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(200);
+                    res.body.should.be.an("object");
+                    res.body.should.have.property("message");
+                    res.body.message.should.equal("Category deleted.");
+                    done();
+                });
+        });
+        it('should get 404 no entry found', (done) => {
+            let category = {
+                category: "unknown"
+            };
+
+            chai.request(server)
+                .delete(`/categories/${id}`)
+                .send(category)
+                .end((err, res) => {
+                    if (err) {done(err);}
+                    res.should.have.status(404);
+                    res.body.should.be.an("object");
+                    res.body.should.have.property("message");
+                    res.body.message.should.equal("No valid entry found.");
+                    done();
+                });
+        });
+    });
 });
 

@@ -12,6 +12,7 @@ const app = express();
 const index = require('./api/routes/index');
 const users = require('./api/routes/users');
 const tasks = require('./api/routes/tasks');
+const categories = require('./api/routes/categories');
 
 // Port settings
 const port = process.env.PORT || 1337;
@@ -45,6 +46,7 @@ app.use("/public", express.static('public'));
 app.use('/', index);
 app.use('/users', users);
 app.use('/tasks', tasks);
+app.use('/categories', categories);
 
 // set view engine for testing Oauth / manual for API?
 app.set('view engine', 'ejs');

@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import view from "../img/view.jpg";
 import "./Home.css";
 import { Alert } from "react-bootstrap";
-import NewForm from "../components/NewForm";
+import Form from "../components/Form";
 import AlertBox from "../components/AlertBox";
 
 const Home = () => {
@@ -32,11 +32,6 @@ const Home = () => {
     --bs-btn-hover-bg: #0000f9;
     color: white;
   }
-.alert-secondary {
-    --bs-alert-color: #41464b;
-    --bs-alert-bg: #e6ebfe;
-    --bs-alert-border-color: #bdcffc;
-  }
 .alert-dismissible {
   padding: 1.5rem 3rem;
 }
@@ -54,7 +49,7 @@ const Home = () => {
       <AlertBox message={message} show={show} setShow={setShow} />
       {addTask ? (
         <Alert className="task-adder" variant="secondary" onClose={() => setAddTask(false)} dismissible>
-        <NewForm setAddTask={setAddTask} setMessage={setMessage} show={show} setShow={setShow} />
+        <Form addTask={addTask} setAddTask={setAddTask} setMessage={setMessage} show={show} setShow={setShow} />
         </Alert>
       ) : (
         <>

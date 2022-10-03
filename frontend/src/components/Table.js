@@ -1,21 +1,34 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import React from "react";
-import { useTable } from "react-table";
 import BootstrapTable from 'react-bootstrap/Table';
+import { useFilters, useGlobalFilter, useTable } from "react-table";
+import { GlobalFilter, DefaultFilterForColumn} from "./Filter";
 import "./Table.css";
  
 function Table(props) {
     const { columns, data } = props;
 
-    const tableInstance = useTable({ columns, data })
     const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-    } = tableInstance
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      state,
+      visibleColumns,
+      prepareRow,
+      setGlobalFilter,
+      preGlobalFilteredRows,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn: { Filter: DefaultFilterForColumn },
+      },
+      useFilters,
+      useGlobalFilter
+    );
  
     if (data.length > 0) {
         return (
@@ -32,8 +45,24 @@ function Table(props) {
     }
       `}
         </style>
+            <>
             <BootstrapTable responsive id="myTable" bordered hover {...getTableProps()}>
               <thead>
+              <tr>
+              <th
+                colSpan={visibleColumns.length}
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                {/* Rendering Global Filter */}
+                <GlobalFilter
+                  preGlobalFilteredRows={preGlobalFilteredRows}
+                  globalFilter={state.globalFilter}
+                  setGlobalFilter={setGlobalFilter}
+                />
+              </th>
+              </tr>
                 {// Loop over the header rows
                 headerGroups.map(headerGroup => (
                   // Apply the header row props
@@ -44,6 +73,9 @@ function Table(props) {
                       <th {...column.getHeaderProps()}>
                         {// Render the header
                         column.render('Header')}
+                        {/* Rendering Default Column Filter */}
+                  {/* Render the columns filter UI */}
+                      <div>{column.canFilter ? column.render('Filter') : null}</div>
                       </th>
                     ))}
                   </tr>
@@ -52,7 +84,7 @@ function Table(props) {
               {/* Apply the table body props */}
               <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                rows.map(row => {
+                rows.map((row, i) => {
                   // Prepare the row for display
                   prepareRow(row)
                   return (
@@ -73,6 +105,7 @@ function Table(props) {
                 })}
               </tbody>
             </BootstrapTable>
+            </>
             </>
           );
     }

@@ -102,7 +102,7 @@ exports.update_user = (req, res) => {
                     _id: result._id,
                     name: result.name,
                     email: result.email,
-                    password: result.password
+                    password: result.password,
                 }
             });
         })

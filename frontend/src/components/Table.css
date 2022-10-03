@@ -1,11 +1,21 @@
-#myTable tr > *:nth-child(1) {
-    display: none;
-}
 
 #myTable {
     margin-top: 1em;
 }
 
-/* #myTable tr > *:nth-child(2) {
-    text-align: left;
+#myTable  *:nth-child(1) tr > *:nth-child(4) *:nth-child(1) *:nth-child(1) {
+    display: none;
+}
+
+#myTable  *:nth-child(1) tr > *:nth-child(5) *:nth-child(1) *:nth-child(1) {
+    display: none;
+}
+
+/* #myTable tr > *:nth-child(4) {
+    display: none;
+    visibility: hidden;
+} */
+
+/* .form-control tr > *:nth-child(4) {
+    display: none;
 } */

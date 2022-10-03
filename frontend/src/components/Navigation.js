@@ -23,6 +23,7 @@ const Navigation = () => {
             <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/list">Task list</Nav.Link>
+              <Nav.Link href="/edit">Edit</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
