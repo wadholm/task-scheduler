@@ -156,7 +156,7 @@ describe('Users model', () => {
                     res.should.have.status(200);
                     res.body.should.be.an("object");
                     res.body.should.have.property("message");
-                    res.body.message.should.equal("Success.");
+                    res.body.message.should.equal("New category has been added.");
                     done();
                 });
         });

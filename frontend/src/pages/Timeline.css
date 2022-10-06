@@ -1,0 +1,6 @@
+.timeline-img {
+    width: 100%;
+    margin: auto;
+    grid-column: 3 / 5;
+    grid-row: 1 / 6;
+}

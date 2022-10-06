@@ -7,12 +7,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import AlertBox from "../components/AlertBox";
 import { Alert } from "react-bootstrap";
-import Form from "../components/Form";
+import TaskForm from "../components/Forms/TaskForm";
 import { SelectColumnFilter } from "../components/Filter";
 import "./List.css";
 
 const List = () => {
   const [data, setData] = useState([]);
+  const [categories, setCategories] = useState("");
   const [taskId, setTaskId] = useState("");
   const [show, setShow] = useState(false);
   const [confirm, setConfirm] = useState(false);
@@ -35,8 +36,17 @@ const List = () => {
         .catch((error) => {
           console.error(error);
         });
+      Axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_ENDPOINT}/users/${process.env.REACT_APP_TEST_USER}`,
+      })
+        .then((res) => {
+          setCategories(res.data.user.categories);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   }, []);
-
 
   const columns = useMemo(
     () => [
@@ -97,7 +107,7 @@ const deleteTask = (cell) => {
   return (
   <Container className="p-3 grid wrapper">
   <div className="header-wrapper">
-    <h1 className="header">List view</h1>
+    <h1 className="header">Tasks</h1>
     </div>
     <Container className="main-wrapper">
     <AlertBox
@@ -108,7 +118,7 @@ const deleteTask = (cell) => {
     />
       {editTask ? (
         <Alert className="task-editor" variant="secondary" onClose={() => setEditTask(false)} dismissible>
-        <Form editTask={editTask} setEditTask={setEditTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} />
+        <TaskForm editTask={editTask} setEditTask={setEditTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} categories={categories} />
         </Alert>
       ) : (
         <>

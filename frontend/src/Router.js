@@ -1,11 +1,15 @@
 import React from "react";
 import Home from "./pages/Home";
 import List from "./pages/List";
-import Edit from "./pages/Edit";
+import Timeline from "./pages/Timeline";
+import User from "./pages/User";
+import Categories from "./pages/Categories";
 
 const Routes = {
   "/": () => <Home />,
   "/list": () => <List />,
-  "/edit": () => <Edit />,
+  "/timeline": () => <Timeline />,
+  "/user": () => <User />,
+  "/categories": () => <Categories />,
 };
 export default Routes;

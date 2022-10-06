@@ -6,7 +6,7 @@ import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 function AlertBox(props) {
-  const { message, confirm, setConfirm, show, setShow, taskId, setTaskId } = props;
+  const { message, confirm, setConfirm, show, setShow, taskId, setTaskId, category, setCategory, addCategory } = props;
 
   const handleClose = () => {
     setShow(false);
@@ -21,21 +21,42 @@ function AlertBox(props) {
   const confirmDeletion = () => {
     setConfirm(false);
     setShow(false)
-    Axios({
-      method: "DELETE",
-      url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          console.info(res.data.message);
-          // reload the page
-          window.location.reload(false);
-        }
+    if (taskId) {
+      Axios({
+        method: "DELETE",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
       })
-      .catch((error) => {
-        console.error(error);
-      });
-    setTaskId("");
+        .then((res) => {
+          if (res.status === 200) {
+            console.info(res.data.message);
+            // reload the page
+            window.location.reload(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      setTaskId("");
+    } else if (category) {
+      Axios({
+        method: "DELETE",
+        url: `${process.env.REACT_APP_ENDPOINT}/categories/${process.env.REACT_APP_TEST_USER}`,
+        data: {
+          category: category
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            console.info(res.data.message);
+            // reload the page
+            window.location.reload(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      setCategory("");
+    }
   };
 
   if (confirm) {
@@ -60,6 +81,28 @@ function AlertBox(props) {
       </Modal>
         </>
     );
+  } else if (addCategory) {
+    return (
+      <>
+      <Modal
+      // {...props}
+      size="sm"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      show={show} onHide={handleCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>{message.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{message.text}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCancel}>
+            Ok!
+          </Button>
+        </Modal.Footer>
+      </Modal>
+        </>
+    );
+
   } else if (show) {
     return (
       <>

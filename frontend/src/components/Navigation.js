@@ -2,6 +2,7 @@ import { useRoutes } from "hookrouter";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import logo from "../img/logo.jpg";
 import "./Navigation.css";
 
@@ -22,8 +23,12 @@ const Navigation = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/list">Task list</Nav.Link>
-              <Nav.Link href="/edit">Edit</Nav.Link>
+              <Nav.Link href="/list">List</Nav.Link>
+              <Nav.Link href="/timeline">Timeline</Nav.Link>
+              <NavDropdown title="Settings" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/categories">Categories</NavDropdown.Item>
+              <NavDropdown.Item href="/user">User details</NavDropdown.Item>
+            </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>

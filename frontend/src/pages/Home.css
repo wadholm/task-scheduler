@@ -33,3 +33,7 @@
 .p-wrapper p {
     padding: 0 2em 0 2em;
 }
+
+.input-group .btn {
+    z-index: 1;
+}

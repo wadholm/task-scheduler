@@ -8,7 +8,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import DateTimePicker from "react-datetime-picker";
 import "./Form.css";
 
-function Form(props) {
+function TaskForm(props) {
   const { categories, addTask, setAddTask, setShow, setMessage, editTask, setEditTask, taskId } = props;
 
   const [activeElementType, setActiveElementType] = useState("dropdown");
@@ -41,7 +41,8 @@ function Form(props) {
 
   const dropDownChanged = (event) => {
     setCategory(event.target.value);
-    if (event.target.value === "custom") {
+    console.log(event.target.value);
+    if (event.target.value === "typeYourOwn") {
       setActiveElementType("input");
     }
   };
@@ -53,34 +54,27 @@ function Form(props) {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
+
+    // check validation
     if (form.checkValidity() === false) {
       event.stopPropagation();
-    } else {
-      Axios.all([
-        Axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
-          data: {
-            user: process.env.REACT_APP_TEST_USER,
-            description: description,
-            category: category,
-            start_time: startTime,
-            deadline: deadline,
-            est_duration: estDuration,
-          },
-        }),
-        Axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_ENDPOINT}/categories/${process.env.REACT_APP_TEST_USER}`,
-          data: {
-            category: category
-          },
-        })
-      ]).then(Axios.spread((...responses) => {
-        setAddTask(false);
-          const responseOne = responses[0]
-          const responseTwo = responses[1]
-          if (responseOne.status === 201) {
+
+    // empty category field
+    } else if (!category || category == "typeYourOwn") {
+      Axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
+        data: {
+          user: process.env.REACT_APP_TEST_USER,
+          description: description,
+          start_time: startTime,
+          deadline: deadline,
+          est_duration: estDuration,
+        },
+      })
+        .then((res) => {
+          setAddTask(false);
+          if (res.status === 201) {
             setMessage({
               type: "success",
               title: "Success!",
@@ -88,16 +82,59 @@ function Form(props) {
             });
             setShow(true);
             setValidated(false);
-      }
-      console.info(responseTwo);
-    })).catch(errors => {
-      console.error(errors);
-      setMessage({
-        type: "danger",
-        title: "Ops, something went wrong.",
-        text: "It's not you, it's me, please try again shortly.",
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setMessage({
+            type: "danger",
+            title: "Ops, something went wrong.",
+            text: "It's not you, it's me, please try again shortly.",
+          });
+        });
+    } else {
+        Axios.all([
+          Axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
+            data: {
+              user: process.env.REACT_APP_TEST_USER,
+              description: description,
+              category: category,
+              start_time: startTime,
+              deadline: deadline,
+              est_duration: estDuration,
+            },
+          }),
+          Axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_ENDPOINT}/categories/${process.env.REACT_APP_TEST_USER}`,
+            data: {
+              category: category
+            },
+          })
+        ]).then(Axios.spread((...responses) => {
+          setAddTask(false);
+            const responseOne = responses[0]
+            const responseTwo = responses[1]
+            if (responseOne.status === 201) {
+              setMessage({
+                type: "success",
+                title: "Success!",
+                text: "Your task has been succecfully added.",
+              });
+              setShow(true);
+              setValidated(false);
+        }
+        console.info(responseTwo);
+      })).catch(errors => {
+        console.error(errors);
+        setMessage({
+          type: "danger",
+          title: "Ops, something went wrong.",
+          text: "It's not you, it's me, please try again shortly.",
+        });
       });
-    });
     }
     setValidated(true);
   };
@@ -107,6 +144,38 @@ function Form(props) {
     event.preventDefault();
     if (form.checkValidity() === false) {
       event.stopPropagation();
+    // empty category field
+    } else if (!category || category == "typeYourOwn") {
+      Axios({
+        method: "PATCH",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
+        data: [
+          {"propName": "description", "value": description},
+          {"propName": "category", "value": ""},
+          {"propName": "start_time", "value": startTime},
+          {"propName": "deadline", "value": deadline},
+          {"propName": "est_duration", "value": estDuration}
+        ],
+      })
+        .then((res) => {
+          setEditTask(false);
+          if (res.status === 200) {
+            setMessage({
+              type: "success",
+              title: "Success!",
+              text: res.data.message,
+            });
+            setShow(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setMessage({
+            type: "danger",
+            title: "Ops, something went wrong.",
+            text: "It's not you, it's me, please try again shortly.",
+          });
+        });
     } else {
       Axios.all([
         Axios({
@@ -185,7 +254,7 @@ function Form(props) {
                 onChange={(e) => dropDownChanged(e)}
                 aria-label="Default select example"
               >
-                <option>Category</option>
+                <option value="default">Category</option>
                 {categories ? (
                 categories.map(cat => {
                   return (
@@ -196,7 +265,7 @@ function Form(props) {
               <>
               </>
             )}
-                <option value="custom">type your own</option>
+                <option value="typeYourOwn">type your own</option>
               </BootstrapForm.Control>
             </>
           ) : (
@@ -239,6 +308,7 @@ function Form(props) {
           <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
             <BootstrapForm.Control
+              required
               className="editable"
               onChange={(event) => setEstDuration(event.target.value)}
               type="number"
@@ -258,9 +328,6 @@ function Form(props) {
         </div>
       </>
     );
-
-
-    
   } else if (editTask) {
     return (
       <>
@@ -302,7 +369,7 @@ function Form(props) {
               <>
               </>
             )}
-                <option value="custom">type your own</option>
+                <option value="typeYourOwn">type your own</option>
               </BootstrapForm.Control>
             </>
           ) : (
@@ -345,7 +412,7 @@ function Form(props) {
           <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
             <BootstrapForm.Control
-
+              required
               className="editable"
               onChange={(event) => setEstDuration(event.target.value)}
               type="number"
@@ -353,10 +420,11 @@ function Form(props) {
               max="100"
               placeholder="Hours"
               value={estDuration}
-              
             />
+            <BootstrapForm.Control.Feedback type="invalid">
+              Please provide an estimated duration.
+            </BootstrapForm.Control.Feedback>
           </BootstrapForm.Group>
-  
           <Button variant="primary" type="submit">
             Update task
           </Button>
@@ -378,4 +446,4 @@ function Form(props) {
   );
 }
 
-export default Form;
+export default TaskForm;
