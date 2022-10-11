@@ -13,9 +13,11 @@ import "./List.css";
 
 const List = () => {
   const [data, setData] = useState([]);
+  const [addTask, setAddTask] = useState(false);
   const [categories, setCategories] = useState("");
   const [taskId, setTaskId] = useState("");
   const [show, setShow] = useState(false);
+  const [hideTable, setHideTable] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [editTask, setEditTask] = useState(false);
   const [message, setMessage] = useState({
@@ -67,6 +69,12 @@ const List = () => {
         filter: "includes",
       },
       {
+        Header: 'Deadline',
+        accessor: 'deadline',
+        Filter: SelectColumnFilter,
+        filter: "includes",
+      },
+      {
         Header: 'Edit',
         accessor: 'edit', // accessor is the "key" in the data,
         disableFilters: true,
@@ -82,12 +90,11 @@ const List = () => {
     []
   )
 
-
   const clickedEditTask = (cell) => {
     const id = cell?.row?.original._id;
-    console.info(cell?.row?.original._id);
     setTaskId(id);
     setEditTask(true);
+    setHideTable(true);
 }
 
 const deleteTask = (cell) => {
@@ -105,6 +112,14 @@ const deleteTask = (cell) => {
 }
 
   return (
+  <>
+  <style type="text/css">
+    {`
+    .input-group .btn {
+      z-index: 1;
+    }
+  `}
+  </style>
   <Container className="p-3 grid wrapper">
   <div className="header-wrapper">
     <h1 className="header">Tasks</h1>
@@ -115,18 +130,32 @@ const deleteTask = (cell) => {
     show={show} setShow={setShow}
     confirm={confirm} setConfirm={setConfirm}
     taskId={taskId} setTaskId={setTaskId}
+    setHideTable={setHideTable}
     />
-      {editTask ? (
-        <Alert className="task-editor" variant="secondary" onClose={() => setEditTask(false)} dismissible>
-        <TaskForm editTask={editTask} setEditTask={setEditTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} categories={categories} />
+      {hideTable ? (
+        <>
+        {addTask ? (
+        <>
+        <Alert className="task-adder" variant="secondary" onClose={() => {setAddTask(false), setHideTable(false)}} dismissible>
+        <TaskForm categories={categories} addTask={addTask} setAddTask={setAddTask} setMessage={setMessage} show={show} setShow={setShow} setHideTable={setHideTable} />
         </Alert>
+        </>
       ) : (
         <>
-        <Table columns={columns} data={data} />
+        <Alert className="task-editor" variant="secondary" onClose={() => {setEditTask(false), setHideTable(false)}} dismissible>
+        <TaskForm editTask={editTask} setEditTask={setEditTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} setHideTable={setHideTable} categories={categories} />
+        </Alert>
+        </>
+      )}
+        </>
+      ) : (
+        <>
+        <Table columns={columns} data={data} setAddTask={setAddTask} setHideTable={setHideTable}/>
         </>
       )}
     </Container>
   </Container>
+  </>
   );
 };
 

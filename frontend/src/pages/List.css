@@ -1,5 +1,5 @@
 .App {
-    background-image: linear-gradient(#fff, #e6ebfe);
+    background-image: linear-gradient(#fff 0%, #fff 50%, #e6ebfe 100%);
 }
 
 .header-wrapper {

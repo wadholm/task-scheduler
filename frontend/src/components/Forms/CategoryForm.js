@@ -67,9 +67,14 @@ function CategoryForm(props) {
 
   const handleUpdate = (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    if (form.checkValidity() === false || category == "") {
       event.preventDefault();
       event.stopPropagation();
+  } else if (categoryValue === category) {
+    // no changes
+    setEditCategory(false);
+    setCategory("");
+    setValidated(false);
   } else {
     Axios({
       method: "PUT",
@@ -138,11 +143,18 @@ if (addCategory) {
 } else if (editCategory) {
     return (
       <>
-      <div className="editable">
-        <BootstrapForm noValidate validated={validated} onSubmit={handleUpdate} >
-          <BootstrapForm.Group className="mb-3" controlId="decription">
-            <BootstrapForm.Label>Category</BootstrapForm.Label>
-              <InputGroup className="mb-3">
+      <style type="text/css">
+          {`
+    input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-control, .input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-select, .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating) {
+      border-top-right-radius: 0.375rem;
+      border-bottom-right-radius: 0.385rem;
+    }
+    `}
+</style>
+      <div className="edit-div">
+        <BootstrapForm noValidate validated={validated} >
+          <BootstrapForm.Group controlId="decription">
+              <InputGroup>
                 <BootstrapForm.Control
                   required
                   className="editable"
@@ -150,17 +162,25 @@ if (addCategory) {
                   type="category"
                   value={category}
                 />
+                <Button
+                  variant="secondary"
+                  id="button-addon2"
+                  className="edit-button"
+                  onClick={handleUpdate}
+                >
+                  Save
+                </Button>
               <BootstrapForm.Control.Feedback type="invalid">
               Category can not be empty.
             </BootstrapForm.Control.Feedback>
               </InputGroup>
           </BootstrapForm.Group>
-          <Button variant="primary" type="submit">
+          {/* <Button variant="primary" type="submit">
             Update category
           </Button>
           <Button variant="outline-primary" type="reset" onClick={() => setEditCategory(false)}>
             Cancel
-          </Button>
+          </Button> */}
         </BootstrapForm>
         </div>
       </>

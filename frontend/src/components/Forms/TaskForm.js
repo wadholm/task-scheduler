@@ -9,15 +9,17 @@ import DateTimePicker from "react-datetime-picker";
 import "./Form.css";
 
 function TaskForm(props) {
-  const { categories, addTask, setAddTask, setShow, setMessage, editTask, setEditTask, taskId } = props;
+  const { categories, addTask, setAddTask, setShow, setMessage, editTask, setEditTask, taskId, setHideTable} = props;
 
   const [activeElementType, setActiveElementType] = useState("dropdown");
   const [validated, setValidated] = useState(false);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [startTime, setStartTime] = useState(new Date());
+  // const [startTime, setStartTime] = useState(new Date());
   const [deadline, setDeadline] = useState(new Date());
-  const [estDuration, setEstDuration] = useState("");
+  // const [startMinTime, setStartMinTime] = useState(new Date(2222, 6, 7, 12));
+  // const [deadlineMin, setDeadlineMin] = useState(new Date());
+  // const [estDuration, setEstDuration] = useState("");
 
   if (taskId) {
     useEffect(() => {
@@ -28,9 +30,9 @@ function TaskForm(props) {
         .then((res) => {
           setDescription(res.data.task.description);
           setCategory(res.data.task.category);
-          setStartTime(new Date(res.data.task.start_time));
+          // setStartTime(new Date(res.data.task.start_time));
           setDeadline(new Date(res.data.task.deadline));
-          setEstDuration(res.data.task.est_duration);
+          // setEstDuration(res.data.task.est_duration);
         })
         .catch((error) => {
           console.error(error);
@@ -38,10 +40,22 @@ function TaskForm(props) {
   }, [taskId]);
   }
 
+  // useEffect(() => {
+  //   setDeadline(deadline);
+  // }, [deadline]);
+
+  // function addHours(numOfHours, date) {
+  //   date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
+  //   setDeadline(date);
+  // }
+
+  const cancelAdd = () => {
+    setAddTask(false);
+    setHideTable(false);
+  };
 
   const dropDownChanged = (event) => {
     setCategory(event.target.value);
-    console.log(event.target.value);
     if (event.target.value === "typeYourOwn") {
       setActiveElementType("input");
     }
@@ -67,9 +81,9 @@ function TaskForm(props) {
         data: {
           user: process.env.REACT_APP_TEST_USER,
           description: description,
-          start_time: startTime,
+          // start_time: startTime,
           deadline: deadline,
-          est_duration: estDuration,
+          // est_duration: estDuration,
         },
       })
         .then((res) => {
@@ -101,9 +115,9 @@ function TaskForm(props) {
               user: process.env.REACT_APP_TEST_USER,
               description: description,
               category: category,
-              start_time: startTime,
+              // start_time: startTime,
               deadline: deadline,
-              est_duration: estDuration,
+              // est_duration: estDuration,
             },
           }),
           Axios({
@@ -136,6 +150,7 @@ function TaskForm(props) {
         });
       });
     }
+    setAddTask(false);
     setValidated(true);
   };
 
@@ -152,13 +167,14 @@ function TaskForm(props) {
         data: [
           {"propName": "description", "value": description},
           {"propName": "category", "value": ""},
-          {"propName": "start_time", "value": startTime},
+          // {"propName": "start_time", "value": startTime},
           {"propName": "deadline", "value": deadline},
-          {"propName": "est_duration", "value": estDuration}
+          // {"propName": "est_duration", "value": estDuration}
         ],
       })
         .then((res) => {
           setEditTask(false);
+          setHideTable(false);
           if (res.status === 200) {
             setMessage({
               type: "success",
@@ -184,9 +200,9 @@ function TaskForm(props) {
           data: [
             {"propName": "description", "value": description},
             {"propName": "category", "value": category},
-            {"propName": "start_time", "value": startTime},
+            // {"propName": "start_time", "value": startTime},
             {"propName": "deadline", "value": deadline},
-            {"propName": "est_duration", "value": estDuration}
+            // {"propName": "est_duration", "value": estDuration}
           ],
         }),
         Axios({
@@ -220,7 +236,7 @@ function TaskForm(props) {
       });
     });
     }
-
+    setEditTask(false);
     setValidated(true);
   };
 
@@ -289,26 +305,30 @@ function TaskForm(props) {
             </>
           )}
   
-          <BootstrapForm.Group className="mb-3" controlId="start-time">
+          {/* <BootstrapForm.Group className="mb-3" controlId="start-time">
             <BootstrapForm.Label className="date">Start-time</BootstrapForm.Label>
             <DateTimePicker
               onChange={(date) => setStartTime(date)}
+              // min date for start is today
+              minDate={new Date()}
+              maxDate={startMinTime}
               value={startTime}
             />
-          </BootstrapForm.Group>
+          </BootstrapForm.Group> */}
   
           <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
-              onChange={(date) => setDeadline(date)}
+              onChange={(date) => {setDeadline(date)}}
+              // min date for deadline is today
+              minDate={new Date()}
               value={deadline}
             />
           </BootstrapForm.Group>
   
-          <BootstrapForm.Group className="mb-3" controlId="est-duration">
+          {/* <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
             <BootstrapForm.Control
-              required
               className="editable"
               onChange={(event) => setEstDuration(event.target.value)}
               type="number"
@@ -319,10 +339,13 @@ function TaskForm(props) {
             <BootstrapForm.Control.Feedback type="invalid">
               Please provide an estimated duration.
             </BootstrapForm.Control.Feedback>
-          </BootstrapForm.Group>
+          </BootstrapForm.Group> */}
   
           <Button variant="primary" type="submit">
             Add task
+          </Button>
+          <Button variant="outline-primary" type="reset" onClick={cancelAdd}>
+            Cancel
           </Button>
         </BootstrapForm>
         </div>
@@ -393,26 +416,30 @@ function TaskForm(props) {
             </>
           )}
   
-          <BootstrapForm.Group className="mb-3" controlId="start-time">
+          {/* <BootstrapForm.Group className="mb-3" controlId="start-time">
             <BootstrapForm.Label className="date">Start-time</BootstrapForm.Label>
             <DateTimePicker
               onChange={(date) => setStartTime(date)}
+              // min date for start is today
+              minDate={new Date()}
+              maxDate={deadline}
               value={startTime}
             />
-          </BootstrapForm.Group>
+          </BootstrapForm.Group> */}
   
           <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
-              onChange={(date) => setDeadline(date)}
+              onChange={(date) => {setDeadline(date)}}
+              // minDate={startTime}
+              minDate={new Date()}
               value={deadline}
             />
           </BootstrapForm.Group>
   
-          <BootstrapForm.Group className="mb-3" controlId="est-duration">
+          {/* <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
             <BootstrapForm.Control
-              required
               className="editable"
               onChange={(event) => setEstDuration(event.target.value)}
               type="number"
@@ -424,11 +451,11 @@ function TaskForm(props) {
             <BootstrapForm.Control.Feedback type="invalid">
               Please provide an estimated duration.
             </BootstrapForm.Control.Feedback>
-          </BootstrapForm.Group>
+          </BootstrapForm.Group> */}
           <Button variant="primary" type="submit">
             Update task
           </Button>
-          <Button variant="outline-primary" type="reset" onClick={() => setEditTask(false)}>
+          <Button variant="outline-primary" type="reset" onClick={() => {setEditTask(false), setHideTable(false)}}>
             Cancel
           </Button>
         </BootstrapForm>
@@ -439,9 +466,7 @@ function TaskForm(props) {
   }
   return (
     <>
-    <div className="editable">
-    <p>Something went wrong. </p>
-    </div>
+    <p>Loading tasks... </p>
     </>
   );
 }

@@ -3,12 +3,18 @@
 /* eslint-disable react/jsx-key */
 import React from "react";
 import BootstrapTable from 'react-bootstrap/Table';
-import { useFilters, useGlobalFilter, useTable } from "react-table";
+import { useFilters, useGlobalFilter, useTable, useSortBy } from "react-table";
 import { GlobalFilter, DefaultFilterForColumn} from "./Filter";
+import { Button } from "react-bootstrap";
 import "./Table.css";
  
 function Table(props) {
-    const { columns, data } = props;
+    const { columns, data, setAddTask, setHideTable} = props;
+
+    const onButtonClick = () => {
+      setAddTask(true);
+      setHideTable(true);
+    };
 
     const {
       getTableProps,
@@ -27,7 +33,8 @@ function Table(props) {
         defaultColumn: { Filter: DefaultFilterForColumn },
       },
       useFilters,
-      useGlobalFilter
+      useGlobalFilter,
+      useSortBy
     );
  
     if (data.length > 0) {
@@ -37,22 +44,28 @@ function Table(props) {
           {`
     .table>thead {
       vertical-align: bottom;
-      background-color: #11126d;
-      color: white;
+      background-color: none;
+      color: dark-grey;
+      border: none;
     }
     .table>tbody {
-      background-color: #fff;
+      background: rgb(255 255 255 / 51%);
+    }
+
+    .form-control {
+      box-shadow: 1px 2px 18px #e6ebfe;
+      border: 0px;
     }
       `}
         </style>
             <>
-            <BootstrapTable responsive id="myTable" bordered hover {...getTableProps()}>
+            <BootstrapTable responsive id="myTable" hover {...getTableProps()}>
               <thead>
-              <tr>
+              <tr className="table-head">
               <th
                 colSpan={visibleColumns.length}
                 style={{
-                  textAlign: "center",
+                  textAlign: "left",
                 }}
               >
                 {/* Rendering Global Filter */}
@@ -61,6 +74,7 @@ function Table(props) {
                   globalFilter={state.globalFilter}
                   setGlobalFilter={setGlobalFilter}
                 />
+                <Button variant="secondary" onClick={onButtonClick}>Add task</Button >
               </th>
               </tr>
                 {// Loop over the header rows
@@ -93,6 +107,12 @@ function Table(props) {
                       {// Loop over the rows cells
                       row.cells.map(cell => {
                         // Apply the cell props
+                        if (cell.column.Header === "Deadline") {
+                          let date = new Date(cell.value)
+                          return (
+                            <td key={cell.value}>{date.toLocaleDateString()}</td>
+                          )
+                        }
                         return (
                           <td {...cell.getCellProps()}>
                             {// Render the cell contents

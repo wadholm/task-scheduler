@@ -8,8 +8,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import DateTimePicker from "react-datetime-picker";
 import "./Form.css";
 
-function Form(props) {
-  const { categories, addTask, setAddTask, setShow, setMessage, editTask, setEditTask, taskId } = props;
+function TaskForm(props) {
+  const { categories, addTask, setAddTask, setShow, setMessage, editTask, setEditTask, taskId, setHideTable} = props;
 
   const [activeElementType, setActiveElementType] = useState("dropdown");
   const [validated, setValidated] = useState(false);
@@ -17,6 +17,8 @@ function Form(props) {
   const [category, setCategory] = useState("");
   const [startTime, setStartTime] = useState(new Date());
   const [deadline, setDeadline] = useState(new Date());
+  const [startMinTime, setStartMinTime] = useState(new Date(2222, 6, 7, 12));
+  // const [deadlineMin, setDeadlineMin] = useState(new Date());
   const [estDuration, setEstDuration] = useState("");
 
   if (taskId) {
@@ -38,10 +40,23 @@ function Form(props) {
   }, [taskId]);
   }
 
+  // useEffect(() => {
+  //   setDeadline(deadline);
+  // }, [deadline]);
+
+  // function addHours(numOfHours, date) {
+  //   date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
+  //   setDeadline(date);
+  // }
+
+  const cancelAdd = () => {
+    setAddTask(false);
+    setHideTable(false);
+  };
 
   const dropDownChanged = (event) => {
     setCategory(event.target.value);
-    if (event.target.value === "custom") {
+    if (event.target.value === "typeYourOwn") {
       setActiveElementType("input");
     }
   };
@@ -53,34 +68,27 @@ function Form(props) {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
+
+    // check validation
     if (form.checkValidity() === false) {
       event.stopPropagation();
-    } else {
-      Axios.all([
-        Axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
-          data: {
-            user: process.env.REACT_APP_TEST_USER,
-            description: description,
-            category: category,
-            start_time: startTime,
-            deadline: deadline,
-            est_duration: estDuration,
-          },
-        }),
-        Axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_ENDPOINT}/categories/${process.env.REACT_APP_TEST_USER}`,
-          data: {
-            category: category
-          },
-        })
-      ]).then(Axios.spread((...responses) => {
-        setAddTask(false);
-          const responseOne = responses[0]
-          const responseTwo = responses[1]
-          if (responseOne.status === 201) {
+
+    // empty category field
+    } else if (!category || category == "typeYourOwn") {
+      Axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
+        data: {
+          user: process.env.REACT_APP_TEST_USER,
+          description: description,
+          start_time: startTime,
+          deadline: deadline,
+          est_duration: estDuration,
+        },
+      })
+        .then((res) => {
+          setAddTask(false);
+          if (res.status === 201) {
             setMessage({
               type: "success",
               title: "Success!",
@@ -88,17 +96,61 @@ function Form(props) {
             });
             setShow(true);
             setValidated(false);
-      }
-      console.info(responseTwo);
-    })).catch(errors => {
-      console.error(errors);
-      setMessage({
-        type: "danger",
-        title: "Ops, something went wrong.",
-        text: "It's not you, it's me, please try again shortly.",
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setMessage({
+            type: "danger",
+            title: "Ops, something went wrong.",
+            text: "It's not you, it's me, please try again shortly.",
+          });
+        });
+    } else {
+        Axios.all([
+          Axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_ENDPOINT}/tasks`,
+            data: {
+              user: process.env.REACT_APP_TEST_USER,
+              description: description,
+              category: category,
+              start_time: startTime,
+              deadline: deadline,
+              est_duration: estDuration,
+            },
+          }),
+          Axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_ENDPOINT}/categories/${process.env.REACT_APP_TEST_USER}`,
+            data: {
+              category: category
+            },
+          })
+        ]).then(Axios.spread((...responses) => {
+          setAddTask(false);
+            const responseOne = responses[0]
+            const responseTwo = responses[1]
+            if (responseOne.status === 201) {
+              setMessage({
+                type: "success",
+                title: "Success!",
+                text: "Your task has been succecfully added.",
+              });
+              setShow(true);
+              setValidated(false);
+        }
+        console.info(responseTwo);
+      })).catch(errors => {
+        console.error(errors);
+        setMessage({
+          type: "danger",
+          title: "Ops, something went wrong.",
+          text: "It's not you, it's me, please try again shortly.",
+        });
       });
-    });
     }
+    setAddTask(false);
     setValidated(true);
   };
 
@@ -107,6 +159,39 @@ function Form(props) {
     event.preventDefault();
     if (form.checkValidity() === false) {
       event.stopPropagation();
+    // empty category field
+    } else if (!category || category == "typeYourOwn") {
+      Axios({
+        method: "PATCH",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
+        data: [
+          {"propName": "description", "value": description},
+          {"propName": "category", "value": ""},
+          {"propName": "start_time", "value": startTime},
+          {"propName": "deadline", "value": deadline},
+          {"propName": "est_duration", "value": estDuration}
+        ],
+      })
+        .then((res) => {
+          setEditTask(false);
+          setHideTable(false);
+          if (res.status === 200) {
+            setMessage({
+              type: "success",
+              title: "Success!",
+              text: res.data.message,
+            });
+            setShow(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setMessage({
+            type: "danger",
+            title: "Ops, something went wrong.",
+            text: "It's not you, it's me, please try again shortly.",
+          });
+        });
     } else {
       Axios.all([
         Axios({
@@ -151,7 +236,7 @@ function Form(props) {
       });
     });
     }
-
+    setEditTask(false);
     setValidated(true);
   };
 
@@ -185,7 +270,7 @@ function Form(props) {
                 onChange={(e) => dropDownChanged(e)}
                 aria-label="Default select example"
               >
-                <option>Category</option>
+                <option value="default">Category</option>
                 {categories ? (
                 categories.map(cat => {
                   return (
@@ -196,7 +281,7 @@ function Form(props) {
               <>
               </>
             )}
-                <option value="custom">type your own</option>
+                <option value="typeYourOwn">type your own</option>
               </BootstrapForm.Control>
             </>
           ) : (
@@ -224,6 +309,9 @@ function Form(props) {
             <BootstrapForm.Label className="date">Start-time</BootstrapForm.Label>
             <DateTimePicker
               onChange={(date) => setStartTime(date)}
+              // min date for start is today
+              minDate={new Date()}
+              maxDate={startMinTime}
               value={startTime}
             />
           </BootstrapForm.Group>
@@ -231,7 +319,10 @@ function Form(props) {
           <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
-              onChange={(date) => setDeadline(date)}
+              onChange={(date) => {setDeadline(date), setStartMinTime(date)}}
+              // // min value for deadline is starttime plus one hour
+              // minDate={startTime.setHours(startTime.getHours() + 1)}
+              minDate={startTime}
               value={deadline}
             />
           </BootstrapForm.Group>
@@ -254,13 +345,13 @@ function Form(props) {
           <Button variant="primary" type="submit">
             Add task
           </Button>
+          <Button variant="outline-primary" type="reset" onClick={cancelAdd}>
+            Cancel
+          </Button>
         </BootstrapForm>
         </div>
       </>
     );
-
-
-    
   } else if (editTask) {
     return (
       <>
@@ -302,7 +393,7 @@ function Form(props) {
               <>
               </>
             )}
-                <option value="custom">type your own</option>
+                <option value="typeYourOwn">type your own</option>
               </BootstrapForm.Control>
             </>
           ) : (
@@ -330,6 +421,9 @@ function Form(props) {
             <BootstrapForm.Label className="date">Start-time</BootstrapForm.Label>
             <DateTimePicker
               onChange={(date) => setStartTime(date)}
+              // min date for start is today
+              minDate={new Date()}
+              maxDate={deadline}
               value={startTime}
             />
           </BootstrapForm.Group>
@@ -337,7 +431,8 @@ function Form(props) {
           <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
-              onChange={(date) => setDeadline(date)}
+              onChange={(date) => {setDeadline(date), setStartMinTime(date)}}
+              minDate={startTime}
               value={deadline}
             />
           </BootstrapForm.Group>
@@ -345,7 +440,6 @@ function Form(props) {
           <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
             <BootstrapForm.Control
-
               className="editable"
               onChange={(event) => setEstDuration(event.target.value)}
               type="number"
@@ -353,14 +447,15 @@ function Form(props) {
               max="100"
               placeholder="Hours"
               value={estDuration}
-              
             />
+            <BootstrapForm.Control.Feedback type="invalid">
+              Please provide an estimated duration.
+            </BootstrapForm.Control.Feedback>
           </BootstrapForm.Group>
-  
           <Button variant="primary" type="submit">
             Update task
           </Button>
-          <Button variant="outline-primary" type="reset" onClick={() => setEditTask(false)}>
+          <Button variant="outline-primary" type="reset" onClick={() => {setEditTask(false), setHideTable(false)}}>
             Cancel
           </Button>
         </BootstrapForm>
@@ -371,11 +466,9 @@ function Form(props) {
   }
   return (
     <>
-    <div className="editable">
-    <p>Something went wrong. </p>
-    </div>
+    <p>Loading tasks... </p>
     </>
   );
 }
 
-export default Form;
+export default TaskForm;

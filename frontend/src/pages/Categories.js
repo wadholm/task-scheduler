@@ -10,12 +10,14 @@ import AlertBox from "../components/AlertBox";
 import { Alert } from "react-bootstrap";
 import CategoryForm from "../components/Forms/CategoryForm";
 import "./List.css";
+import "./Categories.css";
 
 const Categories = () => {
   const [data, setData] = useState([]);
   const [editCategory, setEditCategory] = useState(false);
   const [addCategory, setAddCategory] = useState(false);
   const [category, setCategory] = useState("");
+  const [categoryValue, setCategorValue] = useState("");
   const [show, setShow] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [message, setMessage] = useState({
@@ -55,8 +57,15 @@ const Categories = () => {
   }
 
   const clickedEditCategory = (value) => {
-    setCategory(value);
-    setEditCategory(true);
+    if (editCategory) {
+      setEditCategory(false);
+      setCategory("");
+      setCategorValue("");
+    } else {
+      setCategory(value);
+      setCategorValue(value)
+      setEditCategory(true);
+    }
   }
 
   const onButtonClose = () => {
@@ -68,20 +77,21 @@ const Categories = () => {
     <>
     <style type="text/css">
           {`
-    .table>thead {
-      vertical-align: bottom;
-      background-color: #11126d;
-      color: white;
-    }
-    .table>tbody {
-      background-color: #fff;
-    }
     .table {
       margin-top: 1rem;
+    },
+    .table>thead {
+      vertical-align: bottom;
+      background-color: none;
+      color: dark-grey;
+      border: none;
+    }
+    .table>tbody {
+      background: rgb(255 255 255 / 51%);
     }
     .categories {
       max-width: 440px;
-  }
+  },
       `}
     </style>
     <Container className="p-3 grid wrapper">
@@ -96,7 +106,7 @@ const Categories = () => {
     category={category} setCategory={setCategory}
     addCategory={addCategory} setAddCategory={setAddCategory}
     />
-  {editCategory || addCategory ? (
+  {addCategory ? (
     <Alert className="task-editor" variant="secondary" onClose={onButtonClose} dismissible>
     <CategoryForm 
     editCategory={editCategory} setEditCategory={setEditCategory}
@@ -109,7 +119,7 @@ const Categories = () => {
     <>
     {data.categories ? (
         <>
-    <BootstrapTable bordered hover>
+    <BootstrapTable responsive id="catTable" hover>
       <thead>
         <tr>
           <th>Category</th>
@@ -122,9 +132,19 @@ const Categories = () => {
       data.categories.map(category => {
         return (
           <tr key={category}>
-          <td>
-            {category}
-          </td>
+          {editCategory && categoryValue == category ? (
+                  <td>
+        <CategoryForm 
+        editCategory={editCategory} setEditCategory={setEditCategory}
+        addCategory={addCategory} setAddCategory={setAddCategory}
+        categoryValue={category}
+        setMessage={setMessage}
+        show={show} setShow={setShow} />
+        </td>
+      ) : (
+        <td>
+        {category}
+        </td>)}
           <td onClick={() => clickedEditCategory(category)}>
             <FontAwesomeIcon icon={icon({name: 'pen-to-square', style: 'solid'})} />
           </td>

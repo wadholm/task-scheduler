@@ -6,8 +6,8 @@ import User from "./pages/User";
 import Categories from "./pages/Categories";
 
 const Routes = {
-  "/": () => <Home />,
-  "/list": () => <List />,
+  "/": () => <List />,
+  "/add": () => <Home />,
   "/timeline": () => <Timeline />,
   "/user": () => <User />,
   "/categories": () => <Categories />,

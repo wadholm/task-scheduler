@@ -16,6 +16,10 @@
     max-width: 270px;
 }
 
+.edit-div {
+    max-width: 250px;
+}
+
 /* .editable .btn-secondary {
     top: 32px;
     position: relative;

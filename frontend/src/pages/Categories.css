@@ -1,38 +1,24 @@
-
-#myTable {
-    margin-top: 1em;
+#catTable tr > *:nth-child(1) {
     text-align: left;
 }
 
-#myTable  *:nth-child(1) tr > *:nth-child(4) *:nth-child(1) *:nth-child(1) {
-    display: none;
-}
-
-#myTable  *:nth-child(1) tr > *:nth-child(5) *:nth-child(1) *:nth-child(1) {
-    display: none;
-}
-
-#myTable  *:nth-child(1) tr > *:nth-child(6) *:nth-child(1) *:nth-child(1) {
-    display: none;
-}
-
-#myTable  *:nth-child(1) tr > *:nth-child(5) {
-    color: inherit;
-    text-align: center;
-}
-
-#myTable tr > *:nth-child(5) {
+#catTable tr > *:nth-child(2) {
     color: #7c98f5;
     text-align: center;
 }
 
-#myTable  *:nth-child(1) tr > *:nth-child(6) {
+#catTable  *:nth-child(1) tr > *:nth-child(2) {
     color: inherit;
     text-align: center;
 }
 
-#myTable tr > *:nth-child(6) {
+#catTable tr > *:nth-child(3) {
     color: #7c98f5;
+    text-align: center;
+}
+
+#catTable  *:nth-child(1) tr > *:nth-child(3) {
+    color: inherit;
     text-align: center;
 }
 
@@ -43,6 +29,7 @@
 .table>tbody {
     background-color: none;
     background: rgb(255 255 255 / 71%);
+    box-shadow: 1px 2px 18px #e6ebfe;
 }
 
 table tbody tr:first-child td:first-child {
@@ -77,7 +64,7 @@ form {
     text-align: left;
 }
 
-/* #myTable tr > *:nth-child(4) {
+/* .myTable tr > *:nth-child(4) {
     display: none;
     visibility: hidden;
 } */
