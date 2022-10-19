@@ -62,11 +62,67 @@ exports.add_user = (req, res) => {
                     message: "Email already exists"
                 });
             }
+
+            // create 10 years
+            function generateArrayOfYears() {
+                var min = new Date().getFullYear();
+                var max = min + 10;
+                var years = [];
+
+                for (var i = min; i <= max; i++) {
+                    years.push(i);
+                }
+                return years;
+            }
+
+            function generateArrayOfWeeks() {
+                var weeks = [];
+
+                for (var i = 1; i <= 52; i++) {
+                    weeks.push(i);
+                }
+                return weeks;
+            }
+
+            let yearsArr = generateArrayOfYears();
+            let weeksArr = generateArrayOfWeeks();
+            let years = [];
+            let weeks = [];
+            let yearObj;
+            let weekObj;
+
+            weeksArr.forEach(week => {
+                weekObj = {
+                    week: week,
+                    capacity: {
+                        total_capacity: 40,
+                        capacity_left: 40
+                    }
+                };
+
+                weeks.push(weekObj);
+            });
+
+            yearsArr.forEach(year => {
+                yearObj = {
+                    year: year,
+                    weeks: weeks
+                };
+
+                years.push(yearObj);
+            });
+
+            // console.log(years[0].weeks[51].capacity.total_capacity);
+            // console.log(years);
+
+
+
             user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                years: years
             });
 
             user.save()

@@ -9,17 +9,21 @@ import DateTimePicker from "react-datetime-picker";
 import "./Form.css";
 
 function TaskForm(props) {
-  const { categories, addTask, setAddTask, setShow, setMessage, editTask, setEditTask, taskId, setHideTable} = props;
+  const { 
+    categories, addTask, setAddTask, setShow, setMessage,
+    editTask, setEditTask, scheduleTask, setScheduleTask,
+    taskId, setHideTable} = props;
 
+  const today = new Date();
+  // let end = today.setTime(today.getTime() + 24 * 60 * 60 * 1000);
   const [activeElementType, setActiveElementType] = useState("dropdown");
   const [validated, setValidated] = useState(false);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  // const [startTime, setStartTime] = useState(new Date());
-  const [deadline, setDeadline] = useState(new Date());
-  // const [startMinTime, setStartMinTime] = useState(new Date(2222, 6, 7, 12));
-  // const [deadlineMin, setDeadlineMin] = useState(new Date());
-  // const [estDuration, setEstDuration] = useState("");
+  const [startTime, setStartTime] = useState(new Date());
+  const [deadline, setDeadline] = useState(new Date(2222, 6, 7, 12));
+  const [deadlineMin, setDeadlineMin] = useState(new Date());
+  const [estDuration, setEstDuration] = useState("");
 
   if (taskId) {
     useEffect(() => {
@@ -30,9 +34,9 @@ function TaskForm(props) {
         .then((res) => {
           setDescription(res.data.task.description);
           setCategory(res.data.task.category);
-          // setStartTime(new Date(res.data.task.start_time));
-          setDeadline(new Date(res.data.task.deadline));
-          // setEstDuration(res.data.task.est_duration);
+          res.data.task.start_time ? setStartTime(new Date(res.data.task.start_time)) : setStartTime(today)
+          res.data.task.deadline ? setDeadline(new Date(res.data.task.deadline)) : setDeadline(deadline)
+          res.data.task.est_duration ? setEstDuration(res.data.task.est_duration) : setEstDuration("")
         })
         .catch((error) => {
           console.error(error);
@@ -40,9 +44,6 @@ function TaskForm(props) {
   }, [taskId]);
   }
 
-  // useEffect(() => {
-  //   setDeadline(deadline);
-  // }, [deadline]);
 
   // function addHours(numOfHours, date) {
   //   date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
@@ -82,7 +83,7 @@ function TaskForm(props) {
           user: process.env.REACT_APP_TEST_USER,
           description: description,
           // start_time: startTime,
-          deadline: deadline,
+          deadline: deadlineMin,
           // est_duration: estDuration,
         },
       })
@@ -157,6 +158,7 @@ function TaskForm(props) {
   const handleUpdate = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
+
     if (form.checkValidity() === false) {
       event.stopPropagation();
     // empty category field
@@ -236,7 +238,50 @@ function TaskForm(props) {
       });
     });
     }
-    setEditTask(false);
+    // setEditTask(false);
+    setValidated(true);
+  };
+
+  const handleSchedule = (event) => {
+    const form = event.currentTarget;
+    event.preventDefault();
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    // empty category field
+    } else {
+      Axios({
+        method: "PATCH",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
+        data: [
+          // {"propName": "description", "value": description},
+          // {"propName": "category", "value": ""},
+          {"propName": "start_time", "value": startTime},
+          {"propName": "deadline", "value": deadline},
+          {"propName": "est_duration", "value": estDuration}
+        ],
+      })
+        .then((res) => {
+          setScheduleTask(false);
+          setHideTable(false);
+          if (res.status === 200) {
+            setMessage({
+              type: "success",
+              title: "Success!",
+              text: res.data.message,
+            });
+            setShow(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setMessage({
+            type: "danger",
+            title: "Ops, something went wrong.",
+            text: "It's not you, it's me, please try again shortly.",
+          });
+        });
+    }
+    // setScheduleTask(false);
     setValidated(true);
   };
 
@@ -319,10 +364,10 @@ function TaskForm(props) {
           <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
-              onChange={(date) => {setDeadline(date)}}
+              onChange={(date) => {setDeadlineMin(date)}}
               // min date for deadline is today
-              minDate={new Date()}
-              value={deadline}
+              minDate={today}
+              value={deadlineMin}
             />
           </BootstrapForm.Group>
   
@@ -432,7 +477,7 @@ function TaskForm(props) {
             <DateTimePicker
               onChange={(date) => {setDeadline(date)}}
               // minDate={startTime}
-              minDate={new Date()}
+              minDate={deadline < today ? deadline : today}
               value={deadline}
             />
           </BootstrapForm.Group>
@@ -463,6 +508,67 @@ function TaskForm(props) {
       </>
     );
 
+  } else if (scheduleTask) {
+    return (
+      <>
+      <div className="editable">
+        <BootstrapForm noValidate validated={validated} onSubmit={handleSchedule} >
+          <BootstrapForm.Group className="mb-3" controlId="start-time">
+            <BootstrapForm.Label className="date">Start-time</BootstrapForm.Label>
+            <DateTimePicker
+              onChange={(date) => setStartTime(date)}
+              // min date for start is today
+              minDate={today}
+              maxDate={deadline}
+              value={startTime}
+              disableClock={true}
+              format="y-MM-dd"
+              
+            />
+            <BootstrapForm.Control.Feedback type="invalid">
+              Please provide a start time.
+            </BootstrapForm.Control.Feedback>
+          </BootstrapForm.Group>
+  
+          <BootstrapForm.Group className="mb-3" controlId="deadline">
+            <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
+            <DateTimePicker
+              onChange={(date) => {setDeadline(date)}}
+              // min date for deadline is start time
+              minDate={startTime}
+              value={deadline}
+              disableClock={true}
+              format="y-MM-dd"
+            />
+          </BootstrapForm.Group>
+  
+          <BootstrapForm.Group className="mb-3" controlId="est-duration">
+            <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
+            <BootstrapForm.Control
+              className="editable"
+              onChange={(event) => setEstDuration(event.target.value)}
+              type="number"
+              min="1"
+              max="100"
+              placeholder="Hours"
+              value={estDuration}
+              required
+            />
+            <BootstrapForm.Control.Feedback type="invalid">
+              Please provide an estimated duration.
+            </BootstrapForm.Control.Feedback>
+          </BootstrapForm.Group>
+          <Button variant="primary" type="submit">
+            Schedule task
+          </Button>
+          <Button variant="outline-primary" type="reset" onClick={() => {setScheduleTask(false), setHideTable(false)}}>
+            Cancel
+          </Button>
+        </BootstrapForm>
+        </div>
+      </>
+    );
+    
   }
   return (
     <>

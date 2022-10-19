@@ -8,6 +8,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import AlertBox from "../components/AlertBox";
 import { Alert } from "react-bootstrap";
 import TaskForm from "../components/Forms/TaskForm";
+import AddTaskForm from "../components/Forms/AddTaskForm";
 import { SelectColumnFilter } from "../components/Filter";
 import "./List.css";
 
@@ -20,12 +21,12 @@ const List = () => {
   const [hideTable, setHideTable] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [editTask, setEditTask] = useState(false);
+  const [scheduleTask, setScheduleTask] = useState(false);
   const [message, setMessage] = useState({
     type: "",
     title: "",
     text: "",
   });
-
 
   useEffect(() => {
       Axios({
@@ -69,11 +70,34 @@ const List = () => {
         filter: "includes",
       },
       {
+        Header: 'Start',
+        accessor: 'start_time',
+        Filter: SelectColumnFilter,
+        filter: "includes",
+        // eslint-disable-next-line react/prop-types, react/display-name
+        // Cell: props => <FontAwesomeIcon  onClick={() => clickedScheduleTask(props)} icon={icon({name: 'clock', style: 'solid'})} />,
+        Cell: ( props ) => {
+          // eslint-disable-next-line react/prop-types
+          if (props.value) {
+            // eslint-disable-next-line react/prop-types
+            let date = new Date(props.value)
+            return date.toLocaleDateString()
+          }
+          return <FontAwesomeIcon className="clock"  onClick={() => clickedScheduleTask(props)} icon={icon({name: 'clock', style: 'solid'})} />
+         }
+      },
+      {
         Header: 'Deadline',
         accessor: 'deadline',
         Filter: SelectColumnFilter,
         filter: "includes",
       },
+      // {
+      //   Header: 'Schedule',
+      //   accessor: 'schedule', // accessor is the "key" in the data,
+      //   disableFilters: true,
+      //   Cell: props => <FontAwesomeIcon  onClick={() => clickedScheduleTask(props)} icon={icon({name: 'clock', style: 'solid'})} />
+      // },
       {
         Header: 'Edit',
         accessor: 'edit', // accessor is the "key" in the data,
@@ -95,6 +119,15 @@ const List = () => {
     setTaskId(id);
     setEditTask(true);
     setHideTable(true);
+}
+
+const clickedScheduleTask = (cell) => {
+  console.log(cell);
+  const id = cell?.row?.original._id;
+  console.log("Schedule :" + id);
+  setTaskId(id);
+  setScheduleTask(true);
+  setHideTable(true);
 }
 
 const deleteTask = (cell) => {
@@ -137,14 +170,24 @@ const deleteTask = (cell) => {
         {addTask ? (
         <>
         <Alert className="task-adder" variant="secondary" onClose={() => {setAddTask(false), setHideTable(false)}} dismissible>
-        <TaskForm categories={categories} addTask={addTask} setAddTask={setAddTask} setMessage={setMessage} show={show} setShow={setShow} setHideTable={setHideTable} />
+        <AddTaskForm categories={categories} addTask={addTask} setAddTask={setAddTask} setMessage={setMessage} show={show} setShow={setShow} setHideTable={setHideTable} />
         </Alert>
         </>
       ) : (
         <>
+        {editTask ? (
+        <>
         <Alert className="task-editor" variant="secondary" onClose={() => {setEditTask(false), setHideTable(false)}} dismissible>
         <TaskForm editTask={editTask} setEditTask={setEditTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} setHideTable={setHideTable} categories={categories} />
         </Alert>
+        </>
+        ) : (
+        <>
+        <Alert className="task-editor" variant="secondary" onClose={() => {setScheduleTask(false), setHideTable(false)}} dismissible>
+        <TaskForm scheduleTask={scheduleTask} setScheduleTask={setScheduleTask} taskId={taskId} setMessage={setMessage} show={show} setShow={setShow} setHideTable={setHideTable} categories={categories} />
+        </Alert>
+        </>
+      )}
         </>
       )}
         </>

@@ -16,22 +16,27 @@
     display: none;
 }
 
-#myTable  *:nth-child(1) tr > *:nth-child(5) {
-    color: inherit;
-    text-align: center;
-}
-
-#myTable tr > *:nth-child(5) {
-    color: #7c98f5;
-    text-align: center;
-}
-
 #myTable  *:nth-child(1) tr > *:nth-child(6) {
     color: inherit;
     text-align: center;
 }
 
 #myTable tr > *:nth-child(6) {
+    color: #7c98f5;
+    text-align: center;
+}
+
+#myTable  *:nth-child(1) tr > *:nth-child(7) {
+    color: inherit;
+    text-align: center;
+}
+
+#myTable tr > *:nth-child(7) {
+    color: #FF8A83;
+    text-align: center;
+}
+
+.clock {
     color: #7c98f5;
     text-align: center;
 }

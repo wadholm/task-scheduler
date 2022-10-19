@@ -1,6 +1,19 @@
 const mongoose = require("mongoose");
 
-// const categoriesSchema = mongoose.Schema({ name: { type: String, unique: true } });
+// const capacitySchema = mongoose.Schema({
+//     capacity: { type: Number, default: 40},
+//     capacity_left: { type: Number, default: 40},
+// });
+
+// const weekSchema = mongoose.Schema({
+//     week: { type: Number},
+//     capacity: { type: capacitySchema}
+// });
+
+// const yearSchema = mongoose.Schema({
+//     year: { type: Number },
+//     weeks: { type: weekSchema}
+// });
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -13,7 +26,9 @@ const userSchema = mongoose.Schema({
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
     password: { type: String, required: true },
-    categories: []
+    categories: [],
+    years: [],
+    capacity: { type: Number, default: 40 },
     // categories: { type: Array, default: ["project", "daily"] }, // add default categories
 });
 
