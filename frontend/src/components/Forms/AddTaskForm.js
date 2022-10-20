@@ -5,20 +5,20 @@ import Axios from "axios";
 import Button from "react-bootstrap/Button";
 import BootstrapForm from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import DateTimePicker from "react-datetime-picker";
+// import DateTimePicker from "react-datetime-picker";
 import "./Form.css";
 
 function TaskForm(props) {
   const { 
     categories, addTask, setAddTask, setShow, setMessage, setHideTable} = props;
 
-  const today = new Date();
+  // const today = new Date();
   // let end = today.setTime(today.getTime() + 24 * 60 * 60 * 1000);
   const [activeElementType, setActiveElementType] = useState("dropdown");
   const [validated, setValidated] = useState(false);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [deadline, setDeadline] = useState(new Date());
+  // const [deadline, setDeadline] = useState(new Date());
 
   const cancelAdd = () => {
     setAddTask(false);
@@ -52,7 +52,7 @@ function TaskForm(props) {
           user: process.env.REACT_APP_TEST_USER,
           description: description,
           // start_time: startTime,
-          deadline: deadline,
+          // deadline: deadline,
           // est_duration: estDuration,
         },
       })
@@ -87,7 +87,7 @@ function TaskForm(props) {
               description: description,
               category: category,
               // start_time: startTime,
-              deadline: deadline,
+              // deadline: deadline,
               // est_duration: estDuration,
             },
           }),
@@ -102,7 +102,6 @@ function TaskForm(props) {
             const responseOne = responses[0]
             const responseTwo = responses[1]
 
-            setAddTask(false);
             if (responseOne.status === 201) {
               setMessage({
                 type: "success",
@@ -110,6 +109,7 @@ function TaskForm(props) {
                 text: "Your task has been succecfully added.",
               });
               setShow(true);
+              // setAddTask(false);
               setValidated(false);
         }
         console.info(responseTwo);
@@ -201,15 +201,17 @@ function TaskForm(props) {
             />
           </BootstrapForm.Group> */}
   
-          <BootstrapForm.Group className="mb-3" controlId="deadline">
+          {/* <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
               onChange={(date) => {setDeadline(date)}}
               // min date for deadline is today
               minDate={today}
               value={deadline}
+              disableClock={true}
+              format="y-MM-dd"
             />
-          </BootstrapForm.Group>
+          </BootstrapForm.Group> */}
   
           {/* <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
@@ -225,13 +227,14 @@ function TaskForm(props) {
               Please provide an estimated duration.
             </BootstrapForm.Control.Feedback>
           </BootstrapForm.Group> */}
-  
+          <div className="update">
           <Button variant="primary" type="submit">
             Add task
           </Button>
           <Button variant="outline-primary" type="reset" onClick={cancelAdd}>
             Cancel
           </Button>
+          </div>
         </BootstrapForm>
         </div>
       </>

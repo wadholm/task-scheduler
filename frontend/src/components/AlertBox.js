@@ -6,16 +6,46 @@ import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 function AlertBox(props) {
-  const { message, confirm, setConfirm, show, setShow, taskId, setTaskId, category, setCategory, addCategory } = props;
+  const { message, setComplete, complete, setAddTask, setEditTask, confirm, setConfirm, show, setShow, taskId, setTaskId, category, setCategory, addCategory } = props;
 
   const handleClose = () => {
     setShow(false);
+    setAddTask(false);
+    setEditTask(false);
     // reload the page
     window.location.reload(false);
   };
 
+  const handleComplete = () => {
+    if (taskId) {
+      Axios({
+        method: "PATCH",
+        url: `${process.env.REACT_APP_ENDPOINT}/tasks/${taskId}`,
+        data: [
+          {"propName": "state", "value": "completed"},
+          {"propName": "est_duration", "value": 999},
+          
+        ],
+      })
+        .then((res) => {
+          setComplete(false);
+          if (res.status === 200) {
+            console.info(res.data.message);
+            // reload the page
+            window.location.reload(false);
+
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      setTaskId("");
+    }
+  };
+
   const handleCancel = () => {
     setShow(false);
+    setComplete(false);
   };
 
   const confirmDeletion = () => {
@@ -119,6 +149,31 @@ function AlertBox(props) {
         <Modal.Footer>
           <Button variant="primary" onClick={handleClose}>
             Ok!
+          </Button>
+        </Modal.Footer>
+      </Modal>
+        </>
+    );
+
+  } else if (complete) {
+    return (
+      <>
+      <Modal
+      // {...props}
+      size="sm"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      show={complete} onHide={handleCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Complete task</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you are done with this task?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleComplete}>
+            Yes 
+          </Button>
+          <Button variant="outline-primary" onClick={handleCancel}>
+            Cancel
           </Button>
         </Modal.Footer>
       </Modal>

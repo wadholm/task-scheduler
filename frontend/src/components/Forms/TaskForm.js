@@ -170,7 +170,7 @@ function TaskForm(props) {
           {"propName": "description", "value": description},
           {"propName": "category", "value": ""},
           // {"propName": "start_time", "value": startTime},
-          {"propName": "deadline", "value": deadline},
+          // {"propName": "deadline", "value": deadline},
           // {"propName": "est_duration", "value": estDuration}
         ],
       })
@@ -203,7 +203,7 @@ function TaskForm(props) {
             {"propName": "description", "value": description},
             {"propName": "category", "value": category},
             // {"propName": "start_time", "value": startTime},
-            {"propName": "deadline", "value": deadline},
+            // {"propName": "deadline", "value": deadline},
             // {"propName": "est_duration", "value": estDuration}
           ],
         }),
@@ -218,7 +218,6 @@ function TaskForm(props) {
           const responseOne = responses[0]
           const responseTwo = responses[1]
 
-          setEditTask(false);
           if (responseOne.status === 200) {
             setMessage({
               type: "success",
@@ -226,6 +225,7 @@ function TaskForm(props) {
               text: responseOne.data.message,
             });
             setShow(true);
+            // setEditTask(false);
             setValidated(false);
           }
           console.info(responseTwo);
@@ -472,7 +472,7 @@ function TaskForm(props) {
             />
           </BootstrapForm.Group> */}
   
-          <BootstrapForm.Group className="mb-3" controlId="deadline">
+          {/* <BootstrapForm.Group className="mb-3" controlId="deadline">
             <BootstrapForm.Label className="date">Deadline</BootstrapForm.Label>
             <DateTimePicker
               onChange={(date) => {setDeadline(date)}}
@@ -480,7 +480,7 @@ function TaskForm(props) {
               minDate={deadline < today ? deadline : today}
               value={deadline}
             />
-          </BootstrapForm.Group>
+          </BootstrapForm.Group> */}
   
           {/* <BootstrapForm.Group className="mb-3" controlId="est-duration">
             <BootstrapForm.Label>Estimated duration (hours)</BootstrapForm.Label>
@@ -497,12 +497,14 @@ function TaskForm(props) {
               Please provide an estimated duration.
             </BootstrapForm.Control.Feedback>
           </BootstrapForm.Group> */}
+          <div className="update">
           <Button variant="primary" type="submit">
             Update task
           </Button>
           <Button variant="outline-primary" type="reset" onClick={() => {setEditTask(false), setHideTable(false)}}>
             Cancel
           </Button>
+          </div>
         </BootstrapForm>
         </div>
       </>

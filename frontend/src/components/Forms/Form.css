@@ -20,6 +20,14 @@
     max-width: 250px;
 }
 
+.update {
+    margin-top: 0.5rem;;
+}
+
+.update>:not(:last-child) {
+    margin-right: 0.25rem;;
+}
+
 /* .editable .btn-secondary {
     top: 32px;
     position: relative;

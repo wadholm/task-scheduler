@@ -16,6 +16,10 @@
     display: none;
 }
 
+#myTable  *:nth-child(1) tr > *:nth-child(7) *:nth-child(1) *:nth-child(1) {
+    display: none;
+}
+
 #myTable  *:nth-child(1) tr > *:nth-child(6) {
     color: inherit;
     text-align: center;
@@ -32,6 +36,15 @@
 }
 
 #myTable tr > *:nth-child(7) {
+    text-align: center;
+}
+
+#myTable  *:nth-child(1) tr > *:nth-child(8) {
+    color: inherit;
+    text-align: center;
+}
+
+#myTable tr > *:nth-child(8) {
     color: #FF8A83;
     text-align: center;
 }

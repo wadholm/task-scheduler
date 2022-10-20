@@ -15,6 +15,9 @@ router.post('/', UsersController.add_user);
 // update user
 router.patch('/:userId', UsersController.update_user);
 
+// update capacity left
+router.patch('/capacity/:userId', UsersController.update_capacity_left);
+
 // delete user
 router.delete('/:userId', UsersController.delete_user);
 

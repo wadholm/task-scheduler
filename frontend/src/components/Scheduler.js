@@ -22,6 +22,13 @@ class MyScheduler extends Component {
         }
       }
 
+      componentDidUpdate() {
+        if (document.getElementsByClassName("header3-text").length > 0) {
+          let resHeader = document.getElementsByClassName("header3-text")
+          resHeader[0].innerText = "Tasks";
+          }
+      }
+
     constructor(props) {
         super(props);
     
@@ -37,73 +44,9 @@ class MyScheduler extends Component {
           newConfig
         );
         schedulerData.localeMoment.locale('fr');
-    
-        //set resources here or later
-        // loop through task name?
-        // let resources = [
-        //   {
-        //     id: 1, // task id?
-        //     name: 'Task1' // description?
-        //   },
-        //   {
-        //     id: 'r2',
-        //     name: 'Task2'
-        //   },
-        //   {
-        //     id: 'r3',
-        //     name: 'Task3'
-        //   },
-        //   {
-        //     id: 'r4',
-        //     name: 'Task4'
-        //   }
-        // ];
+
         schedulerData.setResources(this.props.resources);
-    
-        // loop through tasks again
-        //set events here or later, 
-        //the event array should be sorted in ascending order by event.start property, otherwise there will be some rendering errors
-        // let events = [
-        //   {
-        //     id: 1,
-        //     start: '2022-10-12 09:30:00', // start_time
-        //     end: '2022-10-19 23:30:00', // deadline
-        //     resourceId: 1, // task id?
-        //     title: "Task 1", // estimated duration?
-        //     bgColor: '#D9D9D9',
-        //     resizable: false,
-        //     movable: false
-        //   },
-        //   {
-        //     id: 2,
-        //     start: '2022-10-13 12:30:00',
-        //     end: '2022-10-20 23:30:00',
-        //     resourceId: 'r2',
-        //     title: "Task 2",
-        //     bgColor: 'green',
-        //     resizable: false,
-        //     movable: false
-        //   },
-        //   {
-        //     id: 3,
-        //     start: '2022-10-09 12:30:00',
-        //     end: '2022-10-14 23:30:00',
-        //     resourceId: 'r3',
-        //     title: "Task 3",
-        //     resizable: false,
-        //     movable: false
-        //   },
-        //   {
-        //     id: 4,
-        //     start: '2022-10-09 14:30:00',
-        //     end: '2022-10-13 23:30:00',
-        //     resourceId: 'r4',
-        //     title: "Task 4",
-        //     bgColor: 'orange',
-        //     resizable: false,
-        //     movable: false
-        //   }
-        // ];
+
         schedulerData.setEvents(this.props.events);
     
         this.state = {
@@ -119,12 +62,15 @@ class MyScheduler extends Component {
       }
     
 
-      handleClose = () => this.setState({
+      handleClose = () => {
+        this.setState({
         show: false
-      });
-      handleShow = () => this.setState({
+      })
+    };
+      handleShow = () => {
+        this.setState({
         show: true
-      });
+      })};
     
       prevClick = (schedulerData) => {
         console.log("prevClick")
@@ -178,8 +124,6 @@ class MyScheduler extends Component {
           // assigning present time to now variable
           let end = new Date();
 
-          console.log(moment(first).isoWeek());
-            
           let elapsed = (end-first);
             
           // We'll get the elapsed time in hours
@@ -187,7 +131,6 @@ class MyScheduler extends Component {
 
           // set hours and round to nearest integer
           elapsed = Math.round(elapsed/(1000*60*60));
-          console.log(elapsed);
 
           // set all details and show modal
           if (elapsed/(1000*60*60) < 0) {
@@ -253,13 +196,15 @@ class MyScheduler extends Component {
         } else {
           return (
             <div>
-            <Scheduler 
+            <Scheduler
               schedulerData={viewModel}
               prevClick={this.prevClick}
               nextClick={this.nextClick}
               onSelectDate={this.onSelectDate}
               onViewChange={this.onViewChange}
               eventItemClick={this.eventClicked}
+              schedulerMaxHeight={400}
+
             //   viewEvent2Text="Ops 2"
             //   viewEvent2Click={this.ops2}
               //updateEventStart={this.updateEventStart}

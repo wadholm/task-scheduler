@@ -27,7 +27,7 @@ const Timeline = () => {
         // setData(res.data.tasks);
         res.data.tasks.forEach(task => {
         // start_time and est_duration?
-        if (task.start_time) {
+        if (task.state == "scheduled") {
           scheduled.push(task);
         }
         });
@@ -47,7 +47,7 @@ const Timeline = () => {
             resourceId: task._id, // task id?
             title: task.description, // estimated duration?
             viewEventText: task.est_duration,
-            bgColor: stc(task.category),
+            bgColor: stc(task.category+"PAPPA"),
             resizable: false,
             movable: false
           })

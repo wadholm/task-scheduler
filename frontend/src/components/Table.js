@@ -107,12 +107,12 @@ function Table(props) {
                       {// Loop over the rows cells
                       row.cells.map(cell => {
                         // Apply the cell props
-                        if (cell.column.Header === "Deadline") {
-                          let date = new Date(cell.value)
-                          return (
-                            <td key={cell.value}>{date.toLocaleDateString()}</td>
-                          )
-                        }
+                        // if (cell.column.Header === "Deadline") {
+                        //   let date = new Date(cell.value)
+                        //   return (
+                        //     <td key={cell.value}>{date.toLocaleDateString()}</td>
+                        //   )
+                        // }
                         return (
                           <td {...cell.getCellProps()}>
                             {// Render the cell contents
