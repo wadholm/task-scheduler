@@ -47,6 +47,7 @@ const Timeline = () => {
             resourceId: task._id, // task id?
             title: task.description, // estimated duration?
             viewEventText: task.est_duration,
+            viewEvent2Text: task.category,
             bgColor: stc(task.category+"PAPPA"),
             resizable: false,
             movable: false

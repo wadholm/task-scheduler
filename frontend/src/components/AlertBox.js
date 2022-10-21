@@ -46,6 +46,7 @@ function AlertBox(props) {
   const handleCancel = () => {
     setShow(false);
     setComplete(false);
+    setConfirm(false);
   };
 
   const confirmDeletion = () => {

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Axios from "axios";
 import Button from "react-bootstrap/Button";
 import BootstrapForm from "react-bootstrap/Form";
@@ -27,8 +27,19 @@ function TaskForm(props) {
   const [currentYear, setCurrentYear] = useState("");
   const [currentWeek, setCurrentWeek] = useState("");
   const [newCapacity, setNewCapacity] = useState("");
+  const capacityRef = useRef("");
+  const yearRef = useRef("");
+  const weekRef = useRef("");
   const min = 1;
   const max = 40;
+
+  useEffect(() => {
+    console.log('Fruit', newCapacity);
+  }, [newCapacity])
+
+  useEffect(() => {
+    setNewCapacity(capacityRef.current);
+  });
 
   const handleChange = event => {
     const value = Math.max(min, Math.min(max, Number(event.target.value)));
@@ -106,8 +117,10 @@ function TaskForm(props) {
       // add check for capacity
       // console.log(startTime);
       let startYear = moment(startTime).year();
+      yearRef.current = startYear;
       let endYear = moment(deadline).year();
       let startWeek = moment(startTime).week();
+      weekRef.current = startWeek;
       let endWeek = moment(deadline).week();
       // console.log(startYear  + " " + startWeek);
       // console.log(endYear + " " + endWeek);
@@ -126,12 +139,15 @@ function TaskForm(props) {
             if (year.year == startYear) {
 
               capacityLeft = year.weeks[currentWeek].capacity_left;
-              setNewCapacity(capacityLeft);
+              let number = capacityLeft - estDuration;
+              setNewCapacity(number);
+              console.log(newCapacity);
+              capacityRef.current = number;
               console.log("Capacity left: " + capacityLeft);
               if (capacityLeft - estDuration < 0) {
                 setCurrentWeek(currentWeek);
                 setCurrentYear(year);
-                let number = capacityLeft - estDuration;
+                number = capacityLeft - estDuration;
                 setModalMessage({
                   text: "Weekly capacity is full, how would you like to proceed?",
                   details: `Weekly capacity exceeded with + ${Math.abs(number)} hours`
@@ -157,7 +173,8 @@ function TaskForm(props) {
                 console.log(i);
                 console.log(lastWeek);
                 capacityLeft = year.weeks[i].capacity_left;
-                setNewCapacity(capacityLeft);
+                setNewCapacity(capacityLeft - estDuration);
+                capacityRef.current = number;
                 console.log("Capacity left: " + capacityLeft);
                 if (capacityLeft - estDuration < 0) {
                 setCurrentWeek(currentWeek);
@@ -176,11 +193,15 @@ function TaskForm(props) {
                 // check next week
                 console.log("time to schedule end of loop");
                 // schedule task
+                capacityRef.current = number;
+                console.log(newCapacity);
                 handleSchedule();
                 break;
               } else {
                 console.log("time to schedule");
                 // schedule task
+                capacityRef.current = number;
+                console.log(newCapacity);
                 handleSchedule();
                 break;
               }
@@ -195,6 +216,9 @@ function TaskForm(props) {
 
 
   const handleSchedule = () => {
+    console.log(yearRef.current);
+    console.log(weekRef.current);
+    console.log(capacityRef.current);
       // // add check for capacity
       // console.log(moment(startTime).year());
       // // years.forEach(year => {
@@ -223,9 +247,9 @@ function TaskForm(props) {
             method: "PATCH",
             url: `${process.env.REACT_APP_ENDPOINT}/users/capacity/${process.env.REACT_APP_TEST_USER}`,
             data: {
-              year: currentYear,
-              week: currentWeek,
-              capacity_left: newCapacity
+              year: yearRef.current,
+              week: weekRef.current,
+              capacity_left: capacityRef.current
             },
           })
         ]).then(Axios.spread((...responses) => {

@@ -168,6 +168,7 @@ const clickedScheduleTask = (cell) => {
   setTaskId(id);
   setScheduleTask(true);
   setHideTable(true);
+  setConfirm(false);
 }
 
 const deleteTask = (cell) => {
